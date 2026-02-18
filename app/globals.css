@@ -1,1 +1,14 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
+:root{
+  --pe-orange: #ff5100;
+  --pe-black: #212721;
+  --pe-beige: #f4e9c1;
+  --pe-card: rgba(255,255,255,0.85);
+}
+
+html, body {
+  height: 100%;
+}
