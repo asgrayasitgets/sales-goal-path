@@ -76,6 +76,99 @@ function Sparkline({ values }: { values: number[] }) {
     </svg>
   );
 }
+function GoalGauge({
+  percent,
+  subtitle,
+}: {
+  percent: number | null;
+  subtitle: string;
+}) {
+  const pct = percent ?? 0;
+  const clamped = Math.max(0, Math.min(pct, 1.2)); // allow up to 120% for "above"
+  const radius = 44;
+  const stroke = 10;
+  const cx = 56;
+  const cy = 56;
+  const circumference = 2 * Math.PI * radius;
+
+  const progress = Math.min(clamped / 1.0, 1); // ring fills to 100%, above shown as badge
+  const dash = circumference * (1 - progress);
+
+  const zone = pct >= 1 ? "Above Target" : pct >= 0.8 ? "On Track" : "Below Target";
+
+  return (
+    <div className="rounded-2xl bg-[var(--pe-card)] p-5 shadow-sm border border-black/5">
+      <div className="text-sm font-semibold tracking-wide text-black/60">
+        Goal Gauge
+      </div>
+
+      <div className="mt-3 flex items-center gap-4">
+        <svg width="112" height="112" viewBox="0 0 112 112" className="shrink-0">
+          {/* background ring */}
+          <circle
+            cx={cx}
+            cy={cy}
+            r={radius}
+            fill="none"
+            stroke="rgba(0,0,0,0.10)"
+            strokeWidth={stroke}
+          />
+
+          {/* progress ring */}
+          <circle
+            cx={cx}
+            cy={cy}
+            r={radius}
+            fill="none"
+            stroke="currentColor"
+            className="text-[var(--pe-orange)]"
+            strokeWidth={stroke}
+            strokeLinecap="round"
+            strokeDasharray={circumference}
+            strokeDashoffset={dash}
+            transform={`rotate(-90 ${cx} ${cy})`}
+          />
+
+          {/* center text */}
+          <text
+            x="56"
+            y="56"
+            textAnchor="middle"
+            dominantBaseline="middle"
+            fontSize="20"
+            fontWeight="800"
+            fill="rgba(0,0,0,0.85)"
+          >
+            {percent === null ? "—" : `${Math.round(pct * 100)}%`}
+          </text>
+          <text
+            x="56"
+            y="74"
+            textAnchor="middle"
+            dominantBaseline="middle"
+            fontSize="10"
+            fontWeight="600"
+            fill="rgba(0,0,0,0.55)"
+          >
+            {zone}
+          </text>
+        </svg>
+
+        <div className="min-w-0">
+          <div className="text-sm font-bold text-[var(--pe-black)]">{zone}</div>
+          <div className="mt-1 text-sm text-black/60">{subtitle}</div>
+
+          {pct > 1 ? (
+            <div className="mt-2 inline-flex rounded-full bg-white/70 px-3 py-1 text-xs font-bold text-[var(--pe-black)] border border-black/10">
+              +{Math.round((pct - 1) * 100)}% above goal pace
+            </div>
+          ) : null}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function Page() {
   const [tab, setTab] = useState<"YTD" | "Monthly" | "Weekly">("YTD");
   const [data, setData] = useState<DashboardData | null>(null);
@@ -105,7 +198,11 @@ export default function Page() {
       { label: "% of Goal", value: formatPercent(data.percentOfGoal) },
     ];
   }, [data]);
-
+const gaugeSubtitle =
+  data?.salesYTD != null && data?.salesGoalAnnual != null
+    ? `${formatMoney(data.salesYTD)} of ${formatMoney(data.salesGoalAnnual)}`
+    : "—";
+  
   return (
     <main className="min-h-screen bg-[var(--pe-beige)] p-5">
       <div className="mx-auto max-w-md">
@@ -151,7 +248,10 @@ export default function Page() {
             <Card key={c.label} label={c.label} value={c.value} />
           ))}
         </div>
-{data?.monthly?.actual ? (
+<div className="mt-4">
+  <GoalGauge percent={data?.percentOfGoal ?? null} subtitle={gaugeSubtitle} />
+</div>
+        {data?.monthly?.actual ? (
   <div className="mt-4 rounded-2xl bg-[var(--pe-card)] p-5 shadow-sm border border-black/5">
     <div className="flex items-baseline justify-between">
       <div className="text-sm font-semibold tracking-wide text-black/60">
