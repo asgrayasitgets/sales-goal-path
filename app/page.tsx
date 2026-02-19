@@ -249,10 +249,11 @@ export default function Page() {
         </div>
 
         {/* KPI cards */}
-        <div className="mt-5 grid grid-cols-2 gap-3">
-          {cards.map((c) => (
-            <Card key={c.label} label={c.label} value={c.value} />
-          ))}
+       <div className="mt-5 grid grid-cols-2 gap-3">
+  {cards.map((c) => (
+    <Card key={c.label} label={c.label} value={c.value} />
+  ))}
+</div>
           
 
         {/* Gauge only on YTD */}
