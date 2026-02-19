@@ -131,8 +131,8 @@ function findLatestWeekRow(grid: string[][], today: Date): number | null {
   let bestRow: number | null = null;
   let bestT = -Infinity;
 
-  // Weekly table starts at row 57 in your sheet
-  for (let r = 57; r <= grid.length; r++) {
+  // Restrict to the current weekly block (rows 57–64)
+  for (let r = 57; r <= 64; r++) {
     const raw = getCellRC(grid, r, 1); // col A
     const t = parseDateLoose(raw);
     if (t == null) continue;
