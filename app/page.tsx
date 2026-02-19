@@ -2,15 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 
-type DashboardData = {
-  salesGoalAnnual: number | null;
-  salesYTD: number | null;
-  lastYearRevenue: number | null;
-  percentOfGoal: number | null;
-  ytdActualRevenue?: number | null;
-ytdExpectedRevenue?: number | null;
-  fetchedAt: string;
-  monthly?: {
+type MonthData = {
   month: string;
   targetRevenue: number | null;
   actualRevenue: number | null;
@@ -19,7 +11,7 @@ ytdExpectedRevenue?: number | null;
   sourceRow: number;
 } | null;
 
-weekly?: {
+type WeekData = {
   weekEnding: string;
   targetRevenue: number | null;
   actualRevenue: number | null;
@@ -27,6 +19,20 @@ weekly?: {
   actualQuotesCount: number | null;
   sourceRow: number;
 } | null;
+
+type DashboardData = {
+  salesGoalAnnual: number | null;
+  salesYTD: number | null;
+  lastYearRevenue: number | null;
+  percentOfGoal: number | null;
+
+  ytdActualRevenue: number;
+  ytdExpectedRevenue: number;
+
+  monthly: MonthData;
+  weekly: WeekData;
+
+  fetchedAt: string;
 };
 
 function formatMoney(n: number | null) {
@@ -40,11 +46,15 @@ function formatMoney(n: number | null) {
 
 function formatPercent(n: number | null) {
   if (n === null) return "—";
-  const value = n > 1 ? n / 100 : n;
   return new Intl.NumberFormat("en-CA", {
     style: "percent",
     maximumFractionDigits: 0,
-  }).format(value);
+  }).format(n);
+}
+
+function formatInt(n: number | null) {
+  if (n === null) return "—";
+  return Math.round(n).toLocaleString();
 }
 
 function Card({ label, value }: { label: string; value: string }) {
@@ -60,7 +70,7 @@ function Card({ label, value }: { label: string; value: string }) {
   );
 }
 
-function GoalGauge({
+function PaceGauge({
   actualYTD,
   expectedYTD,
   annualGoal,
@@ -72,8 +82,9 @@ function GoalGauge({
   const actual = actualYTD ?? null;
   const expected = expectedYTD ?? null;
 
-  // Status based on dollars (not calendar)
-  const cushionPct = 0.05; // 5% cushion around expected
+  // Use a tighter cushion (2%) so it feels accurate
+  const cushionPct = 0.02;
+
   const status =
     actual == null || expected == null
       ? "—"
@@ -83,7 +94,6 @@ function GoalGauge({
       ? "Behind Pace"
       : "On Pace";
 
-  // Ring fill uses actual % of ANNUAL goal (optional)
   const pctOfAnnual =
     actual != null && annualGoal != null && annualGoal > 0 ? actual / annualGoal : null;
 
@@ -98,9 +108,7 @@ function GoalGauge({
   const dash = circumference * (1 - progress);
 
   const actualText = pctOfAnnual == null ? "—" : `${Math.round(pctOfAnnual * 100)}%`;
-
-  const delta =
-    actual == null || expected == null ? null : actual - expected;
+  const diff = actual == null || expected == null ? null : actual - expected;
 
   return (
     <div className="rounded-2xl bg-[var(--pe-card)] p-5 shadow-sm border border-black/5">
@@ -170,7 +178,7 @@ function GoalGauge({
           <div className="mt-2 text-xs text-black/55">
             Difference:{" "}
             <span className="font-bold">
-              {delta == null ? "—" : formatMoney(delta)}
+              {diff == null ? "—" : formatMoney(diff)}
             </span>
           </div>
         </div>
@@ -201,18 +209,49 @@ export default function Page() {
 
   const cards = useMemo(() => {
     if (!data) return [];
+
+    if (tab === "Monthly") {
+      return [
+        {
+          label: `Revenue (${data.monthly?.month ?? "This Month"})`,
+          value: `${formatMoney(data.monthly?.actualRevenue ?? null)} / ${formatMoney(
+            data.monthly?.targetRevenue ?? null
+          )}`,
+        },
+        {
+          label: `Quotes Completed (${data.monthly?.month ?? "This Month"})`,
+          value: `${formatInt(data.monthly?.actualQuotesCount ?? null)} / ${formatInt(
+            data.monthly?.targetQuotesCount ?? null
+          )}`,
+        },
+      ];
+    }
+
+    if (tab === "Weekly") {
+      return [
+        {
+          label: `Revenue (Week Ending ${data.weekly?.weekEnding ?? ""})`,
+          value: `${formatMoney(data.weekly?.actualRevenue ?? null)} / ${formatMoney(
+            data.weekly?.targetRevenue ?? null
+          )}`,
+        },
+        {
+          label: `Quotes Completed (Week Ending ${data.weekly?.weekEnding ?? ""})`,
+          value: `${formatInt(data.weekly?.actualQuotesCount ?? null)} / ${formatInt(
+            data.weekly?.targetQuotesCount ?? null
+          )}`,
+        },
+      ];
+    }
+
+    // YTD default
     return [
       { label: "Sales Goal (Annual)", value: formatMoney(data.salesGoalAnnual) },
       { label: "Sales YTD", value: formatMoney(data.salesYTD) },
       { label: "Last Year Revenue", value: formatMoney(data.lastYearRevenue) },
       { label: "% of Goal", value: formatPercent(data.percentOfGoal) },
     ];
-  }, [data]);
-
-  const gaugeSubtitle =
-    data?.salesYTD != null && data?.salesGoalAnnual != null
-      ? `${formatMoney(data.salesYTD)} of ${formatMoney(data.salesGoalAnnual)}`
-      : "—";
+  }, [data, tab]);
 
   return (
     <main className="min-h-screen bg-[var(--pe-beige)] p-5">
@@ -227,6 +266,7 @@ export default function Page() {
                 Live dashboard powered by Google Sheet data
               </div>
             </div>
+
             <button
               onClick={load}
               className="rounded-full bg-[var(--pe-orange)] px-4 py-2 text-sm font-bold text-white shadow-sm"
@@ -259,13 +299,16 @@ export default function Page() {
           ))}
         </div>
 
-        <div className="mt-4">
-          <GoalGauge
-  actualYTD={data?.ytdActualRevenue ?? null}
-  expectedYTD={data?.ytdExpectedRevenue ?? null}
-  annualGoal={data?.salesGoalAnnual ?? null}
-/>
-        </div>
+        {/* Show gauge only on YTD tab */}
+        {tab === "YTD" ? (
+          <div className="mt-4">
+            <PaceGauge
+              actualYTD={data?.ytdActualRevenue ?? null}
+              expectedYTD={data?.ytdExpectedRevenue ?? null}
+              annualGoal={data?.salesGoalAnnual ?? null}
+            />
+          </div>
+        ) : null}
 
         <div className="mt-4 text-xs text-black/50 text-center">
           {error ? (
