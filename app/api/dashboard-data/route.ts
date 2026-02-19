@@ -43,7 +43,7 @@ function csvToGrid(csvText: string): string[][] {
 
 function getCell(grid: string[][], a1: string): string {
   const match = a1.match(/^([A-Z]+)(\d+)$/);
-  if (!match) throw new Error(`Invalid A1 cell: ${a1}`);
+  if (!match) return "";
 
   const colLetters = match[1];
   const rowNumber = parseInt(match[2], 10);
@@ -64,15 +64,20 @@ function toNumber(value: string): number | null {
   if (cleaned === "") return null;
   const n = Number(cleaned);
   return Number.isFinite(n) ? n : null;
-  function getRangeNumbers(grid: string[][], startCell: string, endCell: string): number[] {
-  // Example: C40 to C51
-  const colMatch = startCell.match(/^([A-Z]+)(\d+)$/);
-  const colMatch2 = endCell.match(/^([A-Z]+)(\d+)$/);
-  if (!colMatch || !colMatch2) return [];
+}
 
-  const colLetters = colMatch[1];
-  const startRow = parseInt(colMatch[2], 10);
-  const endRow = parseInt(colMatch2[2], 10);
+function getRangeNumbers(
+  grid: string[][],
+  startCell: string,
+  endCell: string
+): number[] {
+  const start = startCell.match(/^([A-Z]+)(\d+)$/);
+  const end = endCell.match(/^([A-Z]+)(\d+)$/);
+  if (!start || !end) return [];
+
+  const colLetters = start[1];
+  const startRow = parseInt(start[2], 10);
+  const endRow = parseInt(end[2], 10);
 
   const values: number[] = [];
   for (let r = startRow; r <= endRow; r++) {
@@ -80,35 +85,10 @@ function toNumber(value: string): number | null {
     const n = toNumber(getCell(grid, cell));
     values.push(n ?? 0);
   }
+
   return values;
 }
-}
-function getRangeNumbers(
-  grid: string[][],
-  startCell: string,
-  endCell: string
-): number[] {
-  // Example: C40 to C51
-  const start = startCell.match(/^([A-Z]+)(\d+)$/);
-  const end = endCell.match(/^([A-Z]+)(\d+)$/);
-  if (!start || !end) return [];
 
-  const colLettersStart = start[1];
-  const startRow = parseInt(start[2], 10);
-  const colLettersEnd = end[1];
-  const endRow = parseInt(end[2], 10);
-
-  // sanity: same column (C..C)
-  if (colLettersStart !== colLettersEnd) return [];
-
-  const values: number[] = [];
-  for (let r = startRow; r <= endRow; r++) {
-    const cell = `${colLettersStart}${r}`;
-    const n = toNumber(getCell(grid, cell));
-    values.push(n ?? 0);
-  }
-  return values;
-}
 export async function GET() {
   const url = process.env.DASHBOARD_CSV_URL;
 
@@ -135,30 +115,25 @@ export async function GET() {
   const percentOfGoal = toNumber(getCell(grid, "C5"));
   const lastYearRevenue = toNumber(getCell(grid, "C6"));
   const salesYTD = toNumber(getCell(grid, "C52"));
-const monthlyActual = getRangeNumbers(grid, "C40", "C51");
-const monthlyLastYear = getRangeNumbers(grid, "D40", "D51");
-const monthlyLabels = [
-  "Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"
-];
+
+  const monthlyActual = getRangeNumbers(grid, "C40", "C51");
+  const monthlyLastYear = getRangeNumbers(grid, "D40", "D51");
+
+  const monthlyLabels = [
+    "Jan","Feb","Mar","Apr","May","Jun",
+    "Jul","Aug","Sep","Oct","Nov","Dec"
+  ];
+
   return NextResponse.json({
-  salesGoalAnnual,
-  salesYTD,
-  lastYearRevenue,
-  percentOfGoal,
-  monthly: {
-    labels: monthlyLabels,
-    actual: monthlyActual,
-    lastYear: monthlyLastYear
-  },
-  source: "google_sheet_csv",
-  mappedCells: {
-    salesGoalAnnual: "C3",
-    percentOfGoal: "C5",
-    lastYearRevenue: "C6",
-    salesYTD: "C52",
-    monthlyActual: "C40:C51",
-    monthlyLastYear: "D40:D51"
-  },
-  fetchedAt: new Date().toISOString()
-});
+    salesGoalAnnual,
+    salesYTD,
+    lastYearRevenue,
+    percentOfGoal,
+    monthly: {
+      labels: monthlyLabels,
+      actual: monthlyActual,
+      lastYear: monthlyLastYear
+    },
+    fetchedAt: new Date().toISOString()
+  });
 }
