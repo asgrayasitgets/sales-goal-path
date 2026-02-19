@@ -83,7 +83,32 @@ function toNumber(value: string): number | null {
   return values;
 }
 }
+function getRangeNumbers(
+  grid: string[][],
+  startCell: string,
+  endCell: string
+): number[] {
+  // Example: C40 to C51
+  const start = startCell.match(/^([A-Z]+)(\d+)$/);
+  const end = endCell.match(/^([A-Z]+)(\d+)$/);
+  if (!start || !end) return [];
 
+  const colLettersStart = start[1];
+  const startRow = parseInt(start[2], 10);
+  const colLettersEnd = end[1];
+  const endRow = parseInt(end[2], 10);
+
+  // sanity: same column (C..C)
+  if (colLettersStart !== colLettersEnd) return [];
+
+  const values: number[] = [];
+  for (let r = startRow; r <= endRow; r++) {
+    const cell = `${colLettersStart}${r}`;
+    const n = toNumber(getCell(grid, cell));
+    values.push(n ?? 0);
+  }
+  return values;
+}
 export async function GET() {
   const url = process.env.DASHBOARD_CSV_URL;
 
