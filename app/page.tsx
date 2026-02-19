@@ -7,6 +7,8 @@ type DashboardData = {
   salesYTD: number | null;
   lastYearRevenue: number | null;
   percentOfGoal: number | null;
+  ytdActualRevenue?: number | null;
+ytdExpectedRevenue?: number | null;
   fetchedAt: string;
 };
 
