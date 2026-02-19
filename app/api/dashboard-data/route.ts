@@ -97,10 +97,13 @@ function normalize(s: string) {
 
 function findMonthRow(grid: string[][], monthName: string): number | null {
   const target = normalize(monthName);
-  for (let i = 0; i < grid.length; i++) {
-    const first = normalize(grid[i]?.[0] ?? "");
-    if (first === target) return i + 1; // 1-based row
+
+  // Monthly table in your sheet is rows 40–51
+  for (let row = 40; row <= 51; row++) {
+    const first = normalize(getCellRC(grid, row, 1)); // column A
+    if (first === target) return row;
   }
+
   return null;
 }
 
