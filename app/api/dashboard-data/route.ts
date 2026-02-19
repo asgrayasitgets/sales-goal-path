@@ -240,6 +240,9 @@ const weekly =
     percentOfGoal,
     ytdActualRevenue,
 ytdExpectedRevenue,
+    monthly,
+    weekly,
+    
 mappedCells: {
   // keep your existing mappedCells if you have them
   ytdActualRevenue: "C57:C64",
