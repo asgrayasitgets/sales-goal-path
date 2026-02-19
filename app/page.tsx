@@ -56,7 +56,83 @@ function Card({ label, value }: { label: string; value: string }) {
     </div>
   );
 }
+function StatusChip({
+  status,
+}: {
+  status: "Ahead" | "On Pace" | "Behind";
+}) {
+  const styles =
+    status === "Ahead"
+      ? "bg-green-100 text-green-900 border-green-200"
+      : status === "Behind"
+      ? "bg-red-100 text-red-900 border-red-200"
+      : "bg-yellow-100 text-yellow-900 border-yellow-200";
 
+  return (
+    <span
+      className={`inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-bold ${styles}`}
+    >
+      <span className="h-2 w-2 rounded-full bg-current opacity-70" />
+      {status}
+    </span>
+  );
+}
+
+function MetricRow({
+  title,
+  leftLabel,
+  leftValue,
+  rightLabel,
+  rightValue,
+  status,
+  accent = "orange",
+}: {
+  title: string;
+  leftLabel: string;
+  leftValue: string;
+  rightLabel: string;
+  rightValue: string;
+  status: "Ahead" | "On Pace" | "Behind";
+  accent?: "orange" | "black";
+}) {
+  const accentBar =
+    accent === "orange" ? "bg-[var(--pe-orange)]" : "bg-[var(--pe-black)]";
+
+  return (
+    <div className="rounded-2xl bg-[var(--pe-card)] p-5 shadow-sm border border-black/5">
+      <div className="flex items-start justify-between gap-3">
+        <div className="min-w-0">
+          <div className="text-sm font-extrabold text-black/70">{title}</div>
+          <div className="mt-2 grid grid-cols-2 gap-3">
+            <div>
+              <div className="text-xs font-semibold text-black/50">
+                {leftLabel}
+              </div>
+              <div className="mt-1 text-lg font-extrabold text-[var(--pe-black)]">
+                {leftValue}
+              </div>
+            </div>
+
+            <div>
+              <div className="text-xs font-semibold text-black/50">
+                {rightLabel}
+              </div>
+              <div className="mt-1 text-lg font-extrabold text-[var(--pe-black)]">
+                {rightValue}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <StatusChip status={status} />
+      </div>
+
+      <div className="mt-4 h-1.5 w-full rounded-full bg-black/5 overflow-hidden">
+        <div className={`h-full w-1/2 ${accentBar} rounded-full`} />
+      </div>
+    </div>
+  );
+}
 function PaceGauge({
   actualYTD,
   expectedYTD,
