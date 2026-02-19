@@ -40,7 +40,9 @@ function Card({ label, value }: { label: string; value: string }) {
         {label}
       </div>
 
-      <div className="mt-2 font-extrabold leading-none text-[var(--pe-black)] tracking-tight whitespace-nowrap overflow-hidden text-[clamp(1.25rem,3.6vw,2.15rem)]">
+      <div className="mt-2 font-extrabold leading-none text-[var(--pe-black)] tracking-tight whitespace-nowrap text-[clamp(1.2rem,3.4vw,2rem)]">
+  {value}
+</div>
         {value}
       </div>
     </div>
