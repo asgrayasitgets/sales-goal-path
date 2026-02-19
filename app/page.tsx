@@ -253,16 +253,7 @@ export default function Page() {
           {cards.map((c) => (
             <Card key={c.label} label={c.label} value={c.value} />
           ))}
-          {/* If Monthly/Weekly has 3 cards, make the 3rd span full width */}
-          {cards.length === 3 ? <div className="hidden" /> : null}
-        </div>
-
-        {/* For 3-card layouts (Monthly/Weekly), re-render the 3rd card full-width */}
-        {(tab === "Monthly" || tab === "Weekly") && cards.length === 3 ? (
-          <div className="mt-3">
-            <Card label={cards[2].label} value={cards[2].value} />
-          </div>
-        ) : null}
+          
 
         {/* Gauge only on YTD */}
         {tab === "YTD" ? (
