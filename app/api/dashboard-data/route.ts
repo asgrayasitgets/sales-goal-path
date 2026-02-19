@@ -149,6 +149,13 @@ const ytdExpectedRevenue = sumRange(grid, "B57", "B64");
     salesYTD,
     lastYearRevenue,
     percentOfGoal,
+    ytdActualRevenue,
+ytdExpectedRevenue,
+mappedCells: {
+  // keep your existing mappedCells if you have them
+  ytdActualRevenue: "C57:C64",
+  ytdExpectedRevenue: "B57:B64"
+},
     monthly: {
       labels: monthlyLabels,
       actual: monthlyActual,
