@@ -44,39 +44,31 @@ function Card({ label, value }: { label: string; value: string }) {
 }
 
 function GoalGauge({
-  salesYTD,
-  salesGoalAnnual,
-  subtitle,
+  actualYTD,
+  expectedYTD,
+  annualGoal,
 }: {
-  salesYTD: number | null;
-  salesGoalAnnual: number | null;
-  subtitle: string;
+  actualYTD: number | null;
+  expectedYTD: number | null;
+  annualGoal: number | null;
 }) {
-  const pct =
-    salesYTD != null && salesGoalAnnual != null && salesGoalAnnual > 0
-      ? salesYTD / salesGoalAnnual
-      : null;
+  const actual = actualYTD ?? null;
+  const expected = expectedYTD ?? null;
 
-  // Expected progress by today's date (pace)
-  const now = new Date();
-  const start = new Date(now.getFullYear(), 0, 1);
-  const end = new Date(now.getFullYear() + 1, 0, 1);
-  const dayOfYear =
-    Math.floor((now.getTime() - start.getTime()) / 86400000) + 1;
-  const daysInYear = Math.floor((end.getTime() - start.getTime()) / 86400000);
-
-  const expected = dayOfYear / daysInYear;
-
-  // Pace status with cushion
-  const cushion = 0.02; // 2% of annual goal
+  // Status based on dollars (not calendar)
+  const cushionPct = 0.05; // 5% cushion around expected
   const status =
-    pct == null
+    actual == null || expected == null
       ? "—"
-      : pct >= expected + cushion
+      : actual >= expected * (1 + cushionPct)
       ? "Ahead of Pace"
-      : pct <= expected - cushion
+      : actual <= expected * (1 - cushionPct)
       ? "Behind Pace"
       : "On Pace";
+
+  // Ring fill uses actual % of ANNUAL goal (optional)
+  const pctOfAnnual =
+    actual != null && annualGoal != null && annualGoal > 0 ? actual / annualGoal : null;
 
   const radius = 44;
   const stroke = 10;
@@ -84,21 +76,19 @@ function GoalGauge({
   const cy = 56;
   const circumference = 2 * Math.PI * radius;
 
-  const clamped = pct == null ? 0 : Math.max(0, Math.min(pct, 1.2));
+  const clamped = pctOfAnnual == null ? 0 : Math.max(0, Math.min(pctOfAnnual, 1.2));
   const progress = Math.min(clamped, 1);
   const dash = circumference * (1 - progress);
 
-  const actualText = pct == null ? "—" : `${Math.round(pct * 100)}%`;
-  const expectedText = `${Math.round(expected * 100)}%`;
-  const deltaText =
-    pct == null
-      ? "—"
-      : `${pct >= expected ? "+" : ""}${Math.round((pct - expected) * 100)}%`;
+  const actualText = pctOfAnnual == null ? "—" : `${Math.round(pctOfAnnual * 100)}%`;
+
+  const delta =
+    actual == null || expected == null ? null : actual - expected;
 
   return (
     <div className="rounded-2xl bg-[var(--pe-card)] p-5 shadow-sm border border-black/5">
       <div className="text-sm font-semibold tracking-wide text-black/60">
-        Pace Gauge (Today)
+        Pace Gauge (Plan vs Actual)
       </div>
 
       <div className="mt-3 flex items-center gap-4">
@@ -111,7 +101,6 @@ function GoalGauge({
             stroke="rgba(0,0,0,0.10)"
             strokeWidth={stroke}
           />
-
           <circle
             cx={cx}
             cy={cy}
@@ -125,7 +114,6 @@ function GoalGauge({
             strokeDashoffset={dash}
             transform={`rotate(-90 ${cx} ${cy})`}
           />
-
           <text
             x="56"
             y="54"
@@ -155,16 +143,18 @@ function GoalGauge({
             {status}
           </div>
 
-          <div className="mt-1 text-sm text-black/60">{subtitle}</div>
+          <div className="mt-1 text-sm text-black/60">
+            Actual YTD: <span className="font-bold">{formatMoney(actual)}</span>
+          </div>
+          <div className="mt-1 text-sm text-black/60">
+            Expected YTD: <span className="font-bold">{formatMoney(expected)}</span>
+          </div>
 
-          <div className="mt-2 text-xs text-black/55 space-y-1">
-            <div>
-              Expected by today:{" "}
-              <span className="font-bold">{expectedText}</span>
-            </div>
-            <div>
-              Pace difference: <span className="font-bold">{deltaText}</span>
-            </div>
+          <div className="mt-2 text-xs text-black/55">
+            Difference:{" "}
+            <span className="font-bold">
+              {delta == null ? "—" : formatMoney(delta)}
+            </span>
           </div>
         </div>
       </div>
@@ -254,10 +244,10 @@ export default function Page() {
 
         <div className="mt-4">
           <GoalGauge
-            salesYTD={data?.salesYTD ?? null}
-            salesGoalAnnual={data?.salesGoalAnnual ?? null}
-            subtitle={gaugeSubtitle}
-          />
+  actualYTD={data?.ytdActualRevenue ?? null}
+  expectedYTD={data?.ytdExpectedRevenue ?? null}
+  annualGoal={data?.salesGoalAnnual ?? null}
+/>
         </div>
 
         <div className="mt-4 text-xs text-black/50 text-center">
