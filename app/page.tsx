@@ -46,6 +46,7 @@ function Card({ label, value }: { label: string; value: string }) {
     </div>
   );
 }
+
 function Sparkline({ values }: { values: number[] }) {
   const w = 260;
   const h = 60;
