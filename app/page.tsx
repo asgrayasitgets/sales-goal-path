@@ -39,8 +39,8 @@ function Card({ label, value }: { label: string; value: string }) {
       <div className="text-sm font-semibold tracking-wide text-black/60">
         {label}
       </div>
-
-      <div className="mt-2 font-extrabold leading-none text-[var(--pe-black)] tracking-tight text-[clamp(1.5rem,4.2vw,2.6rem)] truncate">
+      
+<div className="mt-2 font-extrabold leading-none text-[var(--pe-black)] tracking-tight text-[clamp(1.4rem,4vw,2.3rem)] whitespace-nowrap">
         {value}
       </div>
     </div>
