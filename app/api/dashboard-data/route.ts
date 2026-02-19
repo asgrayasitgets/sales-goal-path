@@ -133,7 +133,7 @@ function findLatestWeekRow(grid: string[][], today: Date): number | null {
 
   // Restrict to the current weekly block (rows 57–64)
   for (let r = 57; r <= 64; r++) {
-    const raw = getCellRC(grid, r, 1); // col A (week ending date)
+    const raw = getCellRC(grid, r, 1); // col A
     const t = parseDateLoose(raw);
     if (t == null) continue;
 
