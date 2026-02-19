@@ -34,7 +34,7 @@ function Card({ label, value }: { label: string; value: string }) {
       <div className="text-sm font-semibold tracking-wide text-black/60">
         {label}
       </div>
-      <div className="mt-2 text-[clamp(1.5rem,4vw,2.5rem)] font-extrabold leading-none text-[var(--pe-black)]">
+      <div className="mt-2 text-[clamp(1.6rem,4vw,2.6rem)] font-extrabold leading-none text-[var(--pe-black)]">
         {value}
       </div>
     </div>
