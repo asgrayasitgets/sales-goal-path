@@ -30,11 +30,12 @@ function formatPercent(n: number | null) {
 
 function Card({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-2xl bg-[var(--pe-card)] p-5 shadow-sm border border-black/5">
+    <div className="rounded-2xl bg-[var(--pe-card)] p-5 shadow-sm border border-black/5 min-w-0">
       <div className="text-sm font-semibold tracking-wide text-black/60">
         {label}
       </div>
-      <div className="mt-2 text-[clamp(1.6rem,4vw,2.6rem)] font-extrabold leading-none text-[var(--pe-black)] break-words">
+
+      <div className="mt-2 font-extrabold leading-none text-[var(--pe-black)] tracking-tight text-[clamp(1.5rem,4.2vw,2.6rem)] truncate">
         {value}
       </div>
     </div>
