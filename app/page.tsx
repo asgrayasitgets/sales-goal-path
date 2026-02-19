@@ -2,23 +2,12 @@
 
 import { useEffect, useMemo, useState } from "react";
 
-type MonthData = {
-  month: string;
-  targetRevenue: number | null;
-  actualRevenue: number | null;
-  targetQuotesCount: number | null;
-  actualQuotesCount: number | null;
+type MonthlyWeeklyBlock = {
+  revenue: { target: number | null; actual: number | null };
+  quotesCount: { target: number | null; actual: number | null };
+  quotesValue: { target: number | null; actual: number | null };
   sourceRow: number;
-} | null;
-
-type WeekData = {
-  weekEnding: string;
-  targetRevenue: number | null;
-  actualRevenue: number | null;
-  targetQuotesCount: number | null;
-  actualQuotesCount: number | null;
-  sourceRow: number;
-} | null;
+};
 
 type DashboardData = {
   salesGoalAnnual: number | null;
@@ -29,8 +18,8 @@ type DashboardData = {
   ytdActualRevenue: number;
   ytdExpectedRevenue: number;
 
-  monthly: MonthData;
-  weekly: WeekData;
+  monthly: ({ month: string } & MonthlyWeeklyBlock) | null;
+  weekly: ({ weekEnding: string } & MonthlyWeeklyBlock) | null;
 
   fetchedAt: string;
 };
@@ -44,6 +33,11 @@ function formatMoney(n: number | null) {
   }).format(n);
 }
 
+function formatInt(n: number | null) {
+  if (n === null) return "—";
+  return Math.round(n).toLocaleString();
+}
+
 function formatPercent(n: number | null) {
   if (n === null) return "—";
   return new Intl.NumberFormat("en-CA", {
@@ -52,18 +46,11 @@ function formatPercent(n: number | null) {
   }).format(n);
 }
 
-function formatInt(n: number | null) {
-  if (n === null) return "—";
-  return Math.round(n).toLocaleString();
-}
-
 function Card({ label, value }: { label: string; value: string }) {
   return (
     <div className="rounded-2xl bg-[var(--pe-card)] p-5 shadow-sm border border-black/5 min-w-0">
-      <div className="text-sm font-semibold tracking-wide text-black/60">
-        {label}
-      </div>
-      <div className="mt-2 font-extrabold leading-none text-[var(--pe-black)] tracking-tight whitespace-nowrap text-[clamp(1.2rem,3.4vw,2rem)]">
+      <div className="text-sm font-semibold tracking-wide text-black/60">{label}</div>
+      <div className="mt-2 font-extrabold leading-none text-[var(--pe-black)] tracking-tight whitespace-nowrap text-[clamp(1.1rem,3.2vw,1.9rem)]">
         {value}
       </div>
     </div>
@@ -82,9 +69,7 @@ function PaceGauge({
   const actual = actualYTD ?? null;
   const expected = expectedYTD ?? null;
 
-  // Use a tighter cushion (2%) so it feels accurate
-  const cushionPct = 0.02;
-
+  const cushionPct = 0.02; // 2%
   const status =
     actual == null || expected == null
       ? "—"
@@ -118,14 +103,7 @@ function PaceGauge({
 
       <div className="mt-3 flex items-center gap-4">
         <svg width="112" height="112" viewBox="0 0 112 112" className="shrink-0">
-          <circle
-            cx={cx}
-            cy={cy}
-            r={radius}
-            fill="none"
-            stroke="rgba(0,0,0,0.10)"
-            strokeWidth={stroke}
-          />
+          <circle cx={cx} cy={cy} r={radius} fill="none" stroke="rgba(0,0,0,0.10)" strokeWidth={stroke} />
           <circle
             cx={cx}
             cy={cy}
@@ -139,47 +117,24 @@ function PaceGauge({
             strokeDashoffset={dash}
             transform={`rotate(-90 ${cx} ${cy})`}
           />
-          <text
-            x="56"
-            y="54"
-            textAnchor="middle"
-            dominantBaseline="middle"
-            fontSize="20"
-            fontWeight="800"
-            fill="rgba(0,0,0,0.85)"
-          >
+          <text x="56" y="54" textAnchor="middle" dominantBaseline="middle" fontSize="20" fontWeight="800" fill="rgba(0,0,0,0.85)">
             {actualText}
           </text>
-          <text
-            x="56"
-            y="74"
-            textAnchor="middle"
-            dominantBaseline="middle"
-            fontSize="10"
-            fontWeight="700"
-            fill="rgba(0,0,0,0.55)"
-          >
+          <text x="56" y="74" textAnchor="middle" dominantBaseline="middle" fontSize="10" fontWeight="700" fill="rgba(0,0,0,0.55)">
             {status}
           </text>
         </svg>
 
         <div className="min-w-0">
-          <div className="text-sm font-extrabold text-[var(--pe-black)]">
-            {status}
-          </div>
-
+          <div className="text-sm font-extrabold text-[var(--pe-black)]">{status}</div>
           <div className="mt-1 text-sm text-black/60">
             Actual YTD: <span className="font-bold">{formatMoney(actual)}</span>
           </div>
           <div className="mt-1 text-sm text-black/60">
             Expected YTD: <span className="font-bold">{formatMoney(expected)}</span>
           </div>
-
           <div className="mt-2 text-xs text-black/55">
-            Difference:{" "}
-            <span className="font-bold">
-              {diff == null ? "—" : formatMoney(diff)}
-            </span>
+            Difference: <span className="font-bold">{diff == null ? "—" : formatMoney(diff)}</span>
           </div>
         </div>
       </div>
@@ -199,8 +154,7 @@ export default function Page() {
       setError("Could not load dashboard data.");
       return;
     }
-    const json = await res.json();
-    setData(json);
+    setData(await res.json());
   }
 
   useEffect(() => {
@@ -211,35 +165,38 @@ export default function Page() {
     if (!data) return [];
 
     if (tab === "Monthly") {
+      const m = data.monthly;
       return [
         {
-          label: `Revenue (${data.monthly?.month ?? "This Month"})`,
-          value: `${formatMoney(data.monthly?.actualRevenue ?? null)} / ${formatMoney(
-            data.monthly?.targetRevenue ?? null
-          )}`,
+          label: `Revenue (${m?.month ?? "This Month"})`,
+          value: `${formatMoney(m?.revenue.actual ?? null)} / ${formatMoney(m?.revenue.target ?? null)}`,
         },
         {
-          label: `Quotes Completed (${data.monthly?.month ?? "This Month"})`,
-          value: `${formatInt(data.monthly?.actualQuotesCount ?? null)} / ${formatInt(
-            data.monthly?.targetQuotesCount ?? null
-          )}`,
+          label: `Quotes Count (${m?.month ?? "This Month"})`,
+          value: `${formatInt(m?.quotesCount.actual ?? null)} / ${formatInt(m?.quotesCount.target ?? null)}`,
+        },
+        {
+          label: `Quotes Value (${m?.month ?? "This Month"})`,
+          value: `${formatMoney(m?.quotesValue.actual ?? null)} / ${formatMoney(m?.quotesValue.target ?? null)}`,
         },
       ];
     }
 
     if (tab === "Weekly") {
+      const w = data.weekly;
+      const title = w?.weekEnding ? `Week Ending ${w.weekEnding}` : "This Week";
       return [
         {
-          label: `Revenue (Week Ending ${data.weekly?.weekEnding ?? ""})`,
-          value: `${formatMoney(data.weekly?.actualRevenue ?? null)} / ${formatMoney(
-            data.weekly?.targetRevenue ?? null
-          )}`,
+          label: `Revenue (${title})`,
+          value: `${formatMoney(w?.revenue.actual ?? null)} / ${formatMoney(w?.revenue.target ?? null)}`,
         },
         {
-          label: `Quotes Completed (Week Ending ${data.weekly?.weekEnding ?? ""})`,
-          value: `${formatInt(data.weekly?.actualQuotesCount ?? null)} / ${formatInt(
-            data.weekly?.targetQuotesCount ?? null
-          )}`,
+          label: `Quotes Count (${title})`,
+          value: `${formatInt(w?.quotesCount.actual ?? null)} / ${formatInt(w?.quotesCount.target ?? null)}`,
+        },
+        {
+          label: `Quotes Value (${title})`,
+          value: `${formatMoney(w?.quotesValue.actual ?? null)} / ${formatMoney(w?.quotesValue.target ?? null)}`,
         },
       ];
     }
@@ -259,9 +216,7 @@ export default function Page() {
         <div className="rounded-3xl bg-white/60 p-5 border border-black/5">
           <div className="flex items-start justify-between gap-4">
             <div>
-              <div className="text-2xl font-extrabold text-[var(--pe-black)]">
-                Sales Goal Path
-              </div>
+              <div className="text-2xl font-extrabold text-[var(--pe-black)]">Sales Goal Path</div>
               <div className="mt-1 text-sm text-black/60">
                 Live dashboard powered by Google Sheet data
               </div>
@@ -293,13 +248,23 @@ export default function Page() {
           </div>
         </div>
 
+        {/* KPI cards */}
         <div className="mt-5 grid grid-cols-2 gap-3">
           {cards.map((c) => (
             <Card key={c.label} label={c.label} value={c.value} />
           ))}
+          {/* If Monthly/Weekly has 3 cards, make the 3rd span full width */}
+          {cards.length === 3 ? <div className="hidden" /> : null}
         </div>
 
-        {/* Show gauge only on YTD tab */}
+        {/* For 3-card layouts (Monthly/Weekly), re-render the 3rd card full-width */}
+        {(tab === "Monthly" || tab === "Weekly") && cards.length === 3 ? (
+          <div className="mt-3">
+            <Card label={cards[2].label} value={cards[2].value} />
+          </div>
+        ) : null}
+
+        {/* Gauge only on YTD */}
         {tab === "YTD" ? (
           <div className="mt-4">
             <PaceGauge
