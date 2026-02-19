@@ -10,6 +10,23 @@ type DashboardData = {
   ytdActualRevenue?: number | null;
 ytdExpectedRevenue?: number | null;
   fetchedAt: string;
+  monthly?: {
+  month: string;
+  targetRevenue: number | null;
+  actualRevenue: number | null;
+  targetQuotesCount: number | null;
+  actualQuotesCount: number | null;
+  sourceRow: number;
+} | null;
+
+weekly?: {
+  weekEnding: string;
+  targetRevenue: number | null;
+  actualRevenue: number | null;
+  targetQuotesCount: number | null;
+  actualQuotesCount: number | null;
+  sourceRow: number;
+} | null;
 };
 
 function formatMoney(n: number | null) {
