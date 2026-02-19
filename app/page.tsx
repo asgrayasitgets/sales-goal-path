@@ -217,6 +217,14 @@ function PaceGauge({
     </div>
   );
 }
+function getStatus(actual: number | null, target: number | null) {
+  if (actual == null || target == null || target === 0) return "On Pace" as const;
+  const ratio = actual / target;
+
+  if (ratio >= 1.05) return "Ahead" as const;
+  if (ratio <= 0.95) return "Behind" as const;
+  return "On Pace" as const;
+}
 
 export default function Page() {
   const [tab, setTab] = useState<"YTD" | "Monthly" | "Weekly">("YTD");
