@@ -255,18 +255,7 @@ const gaugeSubtitle =
   <div className="mt-4 rounded-2xl bg-[var(--pe-card)] p-5 shadow-sm border border-black/5">
     <div className="flex items-baseline justify-between">
       <div className="text-sm font-semibold tracking-wide text-black/60">
-        Monthly Revenue Trend (This Year)
-      </div>
-      <div className="text-xs text-black/40">
-        Jan–Dec
-      </div>
-    </div>
-
-    <div className="mt-2 text-[var(--pe-orange)]">
-      <Sparkline values={data.monthly.actual} />
-    </div>
-  </div>
-) : null}
+        
         <div className="mt-4 text-xs text-black/50 text-center">
           {error ? (
             <span className="text-red-600">{error}</span>
