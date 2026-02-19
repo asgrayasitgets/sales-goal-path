@@ -65,7 +65,26 @@ function toNumber(value: string): number | null {
   const n = Number(cleaned);
   return Number.isFinite(n) ? n : null;
 }
+function sumRange(grid: string[][], startCell: string, endCell: string): number {
+  const start = startCell.match(/^([A-Z]+)(\d+)$/);
+  const end = endCell.match(/^([A-Z]+)(\d+)$/);
+  if (!start || !end) return 0;
 
+  const colStart = start[1];
+  const rowStart = parseInt(start[2], 10);
+  const colEnd = end[1];
+  const rowEnd = parseInt(end[2], 10);
+
+  // This simple version expects same column (B..B, C..C)
+  if (colStart !== colEnd) return 0;
+
+  let total = 0;
+  for (let r = rowStart; r <= rowEnd; r++) {
+    const cell = `${colStart}${r}`;
+    total += toNumber(getCell(grid, cell)) ?? 0;
+  }
+  return total;
+}
 function getRangeNumbers(
   grid: string[][],
   startCell: string,
@@ -118,7 +137,8 @@ export async function GET() {
 
   const monthlyActual = getRangeNumbers(grid, "C40", "C51");
   const monthlyLastYear = getRangeNumbers(grid, "D40", "D51");
-
+const ytdActualRevenue = sumRange(grid, "C57", "C64");
+const ytdExpectedRevenue = sumRange(grid, "B57", "B64");
   const monthlyLabels = [
     "Jan","Feb","Mar","Apr","May","Jun",
     "Jul","Aug","Sep","Oct","Nov","Dec"
