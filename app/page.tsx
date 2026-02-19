@@ -77,29 +77,59 @@ function Sparkline({ values }: { values: number[] }) {
   );
 }
 function GoalGauge({
-  percent,
+  salesYTD,
+  salesGoalAnnual,
   subtitle,
 }: {
-  percent: number | null;
+  salesYTD: number | null;
+  salesGoalAnnual: number | null;
   subtitle: string;
 }) {
-  const pct = percent ?? 0;
-  const clamped = Math.max(0, Math.min(pct, 1.2)); // allow up to 120% for "above"
+  const pct =
+    salesYTD != null && salesGoalAnnual != null && salesGoalAnnual > 0
+      ? salesYTD / salesGoalAnnual
+      : null;
+
+  // Expected progress by today's date (pace)
+  const now = new Date();
+  const start = new Date(now.getFullYear(), 0, 1);
+  const end = new Date(now.getFullYear() + 1, 0, 1);
+  const dayOfYear = Math.floor((now.getTime() - start.getTime()) / 86400000) + 1;
+  const daysInYear = Math.floor((end.getTime() - start.getTime()) / 86400000);
+
+  const expected = dayOfYear / daysInYear; // e.g. Feb 18 ≈ 0.134
+
+  // Pace status (give a small cushion so it doesn't feel jumpy)
+  const cushion = 0.02; // 2% of annual goal
+  const status =
+    pct == null
+      ? "—"
+      : pct >= expected + cushion
+      ? "Ahead of Pace"
+      : pct <= expected - cushion
+      ? "Behind Pace"
+      : "On Pace";
+
   const radius = 44;
   const stroke = 10;
   const cx = 56;
   const cy = 56;
   const circumference = 2 * Math.PI * radius;
 
-  const progress = Math.min(clamped / 1.0, 1); // ring fills to 100%, above shown as badge
+  // Fill ring to actual % (cap at 120% so it doesn't get weird)
+  const clamped = pct == null ? 0 : Math.max(0, Math.min(pct, 1.2));
+  const progress = Math.min(clamped, 1);
   const dash = circumference * (1 - progress);
 
-  const zone = pct >= 1 ? "Above Target" : pct >= 0.8 ? "On Track" : "Below Target";
+  const actualText = pct == null ? "—" : `${Math.round(pct * 100)}%`;
+  const expectedText = `${Math.round(expected * 100)}%`;
+  const deltaText =
+    pct == null ? "—" : `${pct >= expected ? "+" : ""}${Math.round((pct - expected) * 100)}%`;
 
   return (
     <div className="rounded-2xl bg-[var(--pe-card)] p-5 shadow-sm border border-black/5">
       <div className="text-sm font-semibold tracking-wide text-black/60">
-        Goal Gauge
+        Pace Gauge (Today)
       </div>
 
       <div className="mt-3 flex items-center gap-4">
@@ -132,14 +162,14 @@ function GoalGauge({
           {/* center text */}
           <text
             x="56"
-            y="56"
+            y="54"
             textAnchor="middle"
             dominantBaseline="middle"
             fontSize="20"
             fontWeight="800"
             fill="rgba(0,0,0,0.85)"
           >
-            {percent === null ? "—" : `${Math.round(pct * 100)}%`}
+            {actualText}
           </text>
           <text
             x="56"
@@ -147,22 +177,28 @@ function GoalGauge({
             textAnchor="middle"
             dominantBaseline="middle"
             fontSize="10"
-            fontWeight="600"
+            fontWeight="700"
             fill="rgba(0,0,0,0.55)"
           >
-            {zone}
+            {status}
           </text>
         </svg>
 
         <div className="min-w-0">
-          <div className="text-sm font-bold text-[var(--pe-black)]">{zone}</div>
+          <div className="text-sm font-extrabold text-[var(--pe-black)]">
+            {status}
+          </div>
+
           <div className="mt-1 text-sm text-black/60">{subtitle}</div>
 
-          {pct > 1 ? (
-            <div className="mt-2 inline-flex rounded-full bg-white/70 px-3 py-1 text-xs font-bold text-[var(--pe-black)] border border-black/10">
-              +{Math.round((pct - 1) * 100)}% above goal pace
+          <div className="mt-2 text-xs text-black/55 space-y-1">
+            <div>
+              Expected by today: <span className="font-bold">{expectedText}</span>
             </div>
-          ) : null}
+            <div>
+              Pace difference: <span className="font-bold">{deltaText}</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -249,8 +285,11 @@ const gaugeSubtitle =
           ))}
         </div>
 <div className="mt-4">
-  <GoalGauge percent={data?.percentOfGoal ?? null} subtitle={gaugeSubtitle} />
-</div>
+  <GoalGauge
+  salesYTD={data?.salesYTD ?? null}
+  salesGoalAnnual={data?.salesGoalAnnual ?? null}
+  subtitle={gaugeSubtitle}
+/>
         {data?.monthly?.actual ? (
   <div className="mt-4 rounded-2xl bg-[var(--pe-card)] p-5 shadow-sm border border-black/5">
     <div className="flex items-baseline justify-between">
