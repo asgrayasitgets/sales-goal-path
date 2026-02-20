@@ -118,7 +118,7 @@ function MetricRow({
           <div className="text-sm font-extrabold text-black/70">{title}</div>
 
           <div className="mt-3 flex items-end justify-between gap-8">
-  <div className="max-w-[55%]">
+  <div className="max-w-[45%]">
     <div className="text-xs font-semibold text-black/50">{leftLabel}</div>
     <div className="mt-1 text-lg font-extrabold text-[var(--pe-black)]">
       {leftValue}
