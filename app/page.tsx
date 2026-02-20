@@ -10,11 +10,11 @@ type MonthlyWeeklyBlock = {
 };
 
 type DashboardData = {
-  salesGoalAnnual: number | null;
   salesYTD: number | null;
-  lastYearRevenue: number | null;
+  salesGoalAnnual: number | null;
   percentOfGoal: number | null;
-
+lastYearRevenue: number | null;
+  
   ytdActualRevenue: number;
   ytdExpectedRevenue: number;
 
