@@ -298,7 +298,7 @@ export default function Page() {
           <div className="flex items-start justify-between gap-4">
             <div>
               <div className="text-2xl font-extrabold text-[var(--pe-black)]">
-                Sales Goal Path
+                PAINTERS ENTERPRISE DASHBOARD
               </div>
               <div className="mt-1 text-sm text-black/60">
                 Live dashboard powered by Google Sheet data
