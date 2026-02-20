@@ -342,11 +342,11 @@ async function load() {
             </div>
 
             <div className="mt-4">
-              <PaceGauge
-                actualYTD={data?.ytdActualRevenue ?? null}
-                expectedYTD={data?.ytdExpectedRevenue ?? null}
-                annualGoal={data?.salesGoalAnnual ?? null}
-              />
+              <PaceBar
+  actualYTD={data?.ytdActualRevenue ?? null}
+  expectedYTD={data?.ytdExpectedRevenue ?? null}
+/>
+              
             </div>
           </>
         )}
