@@ -268,15 +268,28 @@ export default function Page() {
   const [data, setData] = useState<DashboardData | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  async function load() {
+  const [loading, setLoading] = useState(false);
+
+async function load() {
+  try {
+    setLoading(true);
     setError(null);
-    const res = await fetch("/api/dashboard-data", { cache: "no-store" });
+
+    // cache-bust querystring so it ALWAYS reloads
+    const res = await fetch(`/api/dashboard-data?t=${Date.now()}`, {
+      cache: "no-store",
+    });
+
     if (!res.ok) {
       setError("Could not load dashboard data.");
       return;
     }
+
     setData(await res.json());
+  } finally {
+    setLoading(false);
   }
+}
 
   useEffect(() => {
     load();
