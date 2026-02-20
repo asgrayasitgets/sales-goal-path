@@ -169,7 +169,8 @@ export async function GET() {
   // Base KPIs (keep these aligned with your sheet)
   const salesGoalAnnual = toNumber(getCellA1(grid, "C3"));
   const lastYearRevenue = toNumber(getCellA1(grid, "C6"));
-
+  const conversionRate = toNumber(getCellA1(grid, "C16"));
+  
   // Pace inputs (your plan vs actual ranges)
   const ytdActualRevenue = sumRangeSameColumn(grid, "C57", "C64");
   const ytdExpectedRevenue = sumRangeSameColumn(grid, "B57", "B64");
@@ -242,6 +243,8 @@ export async function GET() {
     lastYearRevenue,
     percentOfGoal,
 
+    conversionRate,
+    
     ytdActualRevenue,
     ytdExpectedRevenue,
 
