@@ -49,13 +49,25 @@ function formatPercent(n: number | null) {
 function Card({ label, value }: { label: string; value: string }) {
   return (
     <div className="rounded-2xl bg-[var(--pe-card)] p-5 shadow-sm border border-black/5 min-w-0">
-      <div className="text-sm font-semibold tracking-wide text-black/60">{label}</div>
+      <div className="text-sm font-semibold tracking-wide text-black/60">
+        {label}
+      </div>
       <div className="mt-2 font-extrabold leading-none text-[var(--pe-black)] tracking-tight whitespace-nowrap text-[clamp(1.1rem,3.2vw,1.9rem)]">
         {value}
       </div>
     </div>
   );
 }
+
+function getStatus(actual: number | null, target: number | null) {
+  if (actual == null || target == null || target === 0) return "On Pace" as const;
+  const ratio = actual / target;
+
+  if (ratio >= 1.05) return "Ahead" as const;
+  if (ratio <= 0.95) return "Behind" as const;
+  return "On Pace" as const;
+}
+
 function StatusChip({
   status,
 }: {
@@ -103,6 +115,7 @@ function MetricRow({
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
           <div className="text-sm font-extrabold text-black/70">{title}</div>
+
           <div className="mt-2 grid grid-cols-2 gap-3">
             <div>
               <div className="text-xs font-semibold text-black/50">
@@ -133,6 +146,7 @@ function MetricRow({
     </div>
   );
 }
+
 function PaceGauge({
   actualYTD,
   expectedYTD,
@@ -145,7 +159,7 @@ function PaceGauge({
   const actual = actualYTD ?? null;
   const expected = expectedYTD ?? null;
 
-  const cushionPct = 0.02; // 2%
+  const cushionPct = 0.02;
   const status =
     actual == null || expected == null
       ? "—"
@@ -179,7 +193,14 @@ function PaceGauge({
 
       <div className="mt-3 flex items-center gap-4">
         <svg width="112" height="112" viewBox="0 0 112 112" className="shrink-0">
-          <circle cx={cx} cy={cy} r={radius} fill="none" stroke="rgba(0,0,0,0.10)" strokeWidth={stroke} />
+          <circle
+            cx={cx}
+            cy={cy}
+            r={radius}
+            fill="none"
+            stroke="rgba(0,0,0,0.10)"
+            strokeWidth={stroke}
+          />
           <circle
             cx={cx}
             cy={cy}
@@ -193,39 +214,53 @@ function PaceGauge({
             strokeDashoffset={dash}
             transform={`rotate(-90 ${cx} ${cy})`}
           />
-          <text x="56" y="54" textAnchor="middle" dominantBaseline="middle" fontSize="20" fontWeight="800" fill="rgba(0,0,0,0.85)">
+          <text
+            x="56"
+            y="54"
+            textAnchor="middle"
+            dominantBaseline="middle"
+            fontSize="20"
+            fontWeight="800"
+            fill="rgba(0,0,0,0.85)"
+          >
             {actualText}
           </text>
-          <text x="56" y="74" textAnchor="middle" dominantBaseline="middle" fontSize="10" fontWeight="700" fill="rgba(0,0,0,0.55)">
+          <text
+            x="56"
+            y="74"
+            textAnchor="middle"
+            dominantBaseline="middle"
+            fontSize="10"
+            fontWeight="700"
+            fill="rgba(0,0,0,0.55)"
+          >
             {status}
           </text>
         </svg>
 
         <div className="min-w-0">
-          <div className="text-sm font-extrabold text-[var(--pe-black)]">{status}</div>
+          <div className="text-sm font-extrabold text-[var(--pe-black)]">
+            {status}
+          </div>
+
           <div className="mt-1 text-sm text-black/60">
             Actual YTD: <span className="font-bold">{formatMoney(actual)}</span>
           </div>
           <div className="mt-1 text-sm text-black/60">
             Expected YTD: <span className="font-bold">{formatMoney(expected)}</span>
           </div>
+
           <div className="mt-2 text-xs text-black/55">
-            Difference: <span className="font-bold">{diff == null ? "—" : formatMoney(diff)}</span>
+            Difference:{" "}
+            <span className="font-bold">
+              {diff == null ? "—" : formatMoney(diff)}
+            </span>
           </div>
         </div>
       </div>
     </div>
   );
 }
-function getStatus(actual: number | null, target: number | null) {
-  if (actual == null || target == null || target === 0) return "On Pace" as const;
-  const ratio = actual / target;
-
-  if (ratio >= 1.05) return "Ahead" as const;
-  if (ratio <= 0.95) return "Behind" as const;
-  return "On Pace" as const;
-}
-
 
 export default function Page() {
   const [tab, setTab] = useState<"YTD" | "Monthly" | "Weekly">("YTD");
@@ -246,54 +281,15 @@ export default function Page() {
     load();
   }, []);
 
-  const cards = useMemo(() => {
+  const ytdCards = useMemo(() => {
     if (!data) return [];
-
-    if (tab === "Monthly") {
-      const m = data.monthly;
-      return [
-        {
-          label: `Revenue (${m?.month ?? "This Month"})`,
-          value: `${formatMoney(m?.revenue.actual ?? null)} / ${formatMoney(m?.revenue.target ?? null)}`,
-        },
-        {
-          label: `Quotes Count (${m?.month ?? "This Month"})`,
-          value: `${formatInt(m?.quotesCount.actual ?? null)} / ${formatInt(m?.quotesCount.target ?? null)}`,
-        },
-        {
-          label: `Quotes Value (${m?.month ?? "This Month"})`,
-          value: `${formatMoney(m?.quotesValue.actual ?? null)} / ${formatMoney(m?.quotesValue.target ?? null)}`,
-        },
-      ];
-    }
-
-    if (tab === "Weekly") {
-      const w = data.weekly;
-      const title = w?.weekEnding ? `Week Ending ${w.weekEnding}` : "This Week";
-      return [
-        {
-          label: `Revenue (${title})`,
-          value: `${formatMoney(w?.revenue.actual ?? null)} / ${formatMoney(w?.revenue.target ?? null)}`,
-        },
-        {
-          label: `Quotes Count (${title})`,
-          value: `${formatInt(w?.quotesCount.actual ?? null)} / ${formatInt(w?.quotesCount.target ?? null)}`,
-        },
-        {
-          label: `Quotes Value (${title})`,
-          value: `${formatMoney(w?.quotesValue.actual ?? null)} / ${formatMoney(w?.quotesValue.target ?? null)}`,
-        },
-      ];
-    }
-
-    // YTD default
     return [
       { label: "Sales Goal (Annual)", value: formatMoney(data.salesGoalAnnual) },
       { label: "Sales YTD", value: formatMoney(data.salesYTD) },
       { label: "Last Year Revenue", value: formatMoney(data.lastYearRevenue) },
       { label: "% of Goal", value: formatPercent(data.percentOfGoal) },
     ];
-  }, [data, tab]);
+  }, [data]);
 
   return (
     <main className="min-h-screen bg-[var(--pe-beige)] p-5">
@@ -301,7 +297,9 @@ export default function Page() {
         <div className="rounded-3xl bg-white/60 p-5 border border-black/5">
           <div className="flex items-start justify-between gap-4">
             <div>
-              <div className="text-2xl font-extrabold text-[var(--pe-black)]">Sales Goal Path</div>
+              <div className="text-2xl font-extrabold text-[var(--pe-black)]">
+                Sales Goal Path
+              </div>
               <div className="mt-1 text-sm text-black/60">
                 Live dashboard powered by Google Sheet data
               </div>
@@ -333,202 +331,112 @@ export default function Page() {
           </div>
         </div>
 
-        {/* YTD uses the 2x2 KPI cards */}
-{tab === "YTD" && (
-  <div className="mt-5 grid grid-cols-2 gap-3">
-    {cards.map((c) => (
-      <Card key={c.label} label={c.label} value={c.value} />
-    ))}
-  </div>
-)}
+        {/* YTD */}
+        {tab === "YTD" && (
+          <>
+            <div className="mt-5 grid grid-cols-2 gap-3">
+              {ytdCards.map((c) => (
+                <Card key={c.label} label={c.label} value={c.value} />
+              ))}
+            </div>
 
-{/* Monthly / Weekly use stacked MetricRows */}
-{tab === "Monthly" && (
-  <div className="mt-5 space-y-3">
-    <MetricRow
-      title={`Revenue (${data?.monthly?.month ?? "This Month"})`}
-      leftLabel="Actual"
-      leftValue={formatMoney(data?.monthly?.revenue?.actual ?? null)}
-      rightLabel="Goal"
-      rightValue={formatMoney(data?.monthly?.revenue?.target ?? null)}
-      status={getStatus(
-        data?.monthly?.revenue?.actual ?? null,
-        data?.monthly?.revenue?.target ?? null
-      )}
-      accent="orange"
-    />
+            <div className="mt-4">
+              <PaceGauge
+                actualYTD={data?.ytdActualRevenue ?? null}
+                expectedYTD={data?.ytdExpectedRevenue ?? null}
+                annualGoal={data?.salesGoalAnnual ?? null}
+              />
+            </div>
+          </>
+        )}
 
-    <MetricRow
-      title={`Quotes Count (${data?.monthly?.month ?? "This Month"})`}
-      leftLabel="Actual"
-      leftValue={formatInt(data?.monthly?.quotesCount?.actual ?? null)}
-      rightLabel="Goal"
-      rightValue={formatInt(data?.monthly?.quotesCount?.target ?? null)}
-      status={getStatus(
-        data?.monthly?.quotesCount?.actual ?? null,
-        data?.monthly?.quotesCount?.target ?? null
-      )}
-      accent="black"
-    />
+        {/* Monthly */}
+        {tab === "Monthly" && (
+          <div className="mt-5 space-y-3">
+            <MetricRow
+              title={`Revenue (${data?.monthly?.month ?? "This Month"})`}
+              leftLabel="Actual"
+              leftValue={formatMoney(data?.monthly?.revenue?.actual ?? null)}
+              rightLabel="Goal"
+              rightValue={formatMoney(data?.monthly?.revenue?.target ?? null)}
+              status={getStatus(
+                data?.monthly?.revenue?.actual ?? null,
+                data?.monthly?.revenue?.target ?? null
+              )}
+              accent="orange"
+            />
 
-    <MetricRow
-      title={`Quotes Value (${data?.monthly?.month ?? "This Month"})`}
-      leftLabel="Actual"
-      leftValue={formatMoney(data?.monthly?.quotesValue?.actual ?? null)}
-      rightLabel="Goal"
-      rightValue={formatMoney(data?.monthly?.quotesValue?.target ?? null)}
-      status={getStatus(
-        data?.monthly?.quotesValue?.actual ?? null,
-        data?.monthly?.quotesValue?.target ?? null
-      )}
-      accent="orange"
-    />
-  </div>
-)}
+            <MetricRow
+              title={`Quotes Count (${data?.monthly?.month ?? "This Month"})`}
+              leftLabel="Actual"
+              leftValue={formatInt(data?.monthly?.quotesCount?.actual ?? null)}
+              rightLabel="Goal"
+              rightValue={formatInt(data?.monthly?.quotesCount?.target ?? null)}
+              status={getStatus(
+                data?.monthly?.quotesCount?.actual ?? null,
+                data?.monthly?.quotesCount?.target ?? null
+              )}
+              accent="black"
+            />
 
-{tab === "Weekly" && (
-  <div className="mt-5 space-y-3">
-    <MetricRow
-      title={`Revenue (Week Ending ${data?.weekly?.weekEnding ?? ""})`}
-      leftLabel="Actual"
-      leftValue={formatMoney(data?.weekly?.revenue?.actual ?? null)}
-      rightLabel="Goal"
-      rightValue={formatMoney(data?.weekly?.revenue?.target ?? null)}
-      status={getStatus(
-        data?.weekly?.revenue?.actual ?? null,
-        data?.weekly?.revenue?.target ?? null
-      )}
-      accent="orange"
-    />
-
-    <MetricRow
-      title={`Quotes Count (Week Ending ${data?.weekly?.weekEnding ?? ""})`}
-      leftLabel="Actual"
-      leftValue={formatInt(data?.weekly?.quotesCount?.actual ?? null)}
-      rightLabel="Goal"
-      rightValue={formatInt(data?.weekly?.quotesCount?.target ?? null)}
-      status={getStatus(
-        data?.weekly?.quotesCount?.actual ?? null,
-        data?.weekly?.quotesCount?.target ?? null
-      )}
-      accent="black"
-    />
-
-    <MetricRow
-      title={`Quotes Value (Week Ending ${data?.weekly?.weekEnding ?? ""})`}
-      leftLabel="Actual"
-      leftValue={formatMoney(data?.weekly?.quotesValue?.actual ?? null)}
-      rightLabel="Goal"
-      rightValue={formatMoney(data?.weekly?.quotesValue?.target ?? null)}
-      status={getStatus(
-        data?.weekly?.quotesValue?.actual ?? null,
-        data?.weekly?.quotesValue?.target ?? null
-      )}
-      accent="orange"
-    />
-  </div>
-)}
-        
-) : null}
-
-{/* Monthly / Weekly use stacked MetricRows */}
-{tab === "Monthly" && (
-  <div className="mt-5 space-y-3">
-    <MetricRow
-      title={`Revenue (${data?.monthly?.month ?? "This Month"})`}
-      leftLabel="Actual"
-      leftValue={formatMoney(data?.monthly?.revenue.actual ?? null)}
-      rightLabel="Goal"
-      rightValue={formatMoney(data?.monthly?.revenue.target ?? null)}
-      status={getStatus(
-        data?.monthly?.revenue.actual ?? null,
-        data?.monthly?.revenue.target ?? null
-      )}
-      accent="orange"
-    />
-
-    <MetricRow
-      title={`Quotes Count (${data?.monthly?.month ?? "This Month"})`}
-      leftLabel="Actual"
-      leftValue={formatInt(data?.monthly?.quotesCount.actual ?? null)}
-      rightLabel="Goal"
-      rightValue={formatInt(data?.monthly?.quotesCount.target ?? null)}
-      status={getStatus(
-        data?.monthly?.quotesCount.actual ?? null,
-        data?.monthly?.quotesCount.target ?? null
-      )}
-      accent="black"
-    />
-
-    <MetricRow
-      title={`Quotes Value (${data?.monthly?.month ?? "This Month"})`}
-      leftLabel="Actual"
-      leftValue={formatMoney(data?.monthly?.quotesValue.actual ?? null)}
-      rightLabel="Goal"
-      rightValue={formatMoney(data?.monthly?.quotesValue.target ?? null)}
-      status={getStatus(
-        data?.monthly?.quotesValue.actual ?? null,
-        data?.monthly?.quotesValue.target ?? null
-      )}
-      accent="orange"
-    />
-  </div>
-)}
-
-{tab === "Weekly" && (
-  <div className="mt-5 space-y-3">
-    <MetricRow
-      title={`Revenue (Week Ending ${data?.weekly?.weekEnding ?? ""})`}
-      leftLabel="Actual"
-      leftValue={formatMoney(data?.weekly?.revenue.actual ?? null)}
-      rightLabel="Goal"
-      rightValue={formatMoney(data?.weekly?.revenue.target ?? null)}
-      status={getStatus(
-        data?.weekly?.revenue.actual ?? null,
-        data?.weekly?.revenue.target ?? null
-      )}
-      accent="orange"
-    />
-
-    <MetricRow
-      title={`Quotes Count (Week Ending ${data?.weekly?.weekEnding ?? ""})`}
-      leftLabel="Actual"
-      leftValue={formatInt(data?.weekly?.quotesCount.actual ?? null)}
-      rightLabel="Goal"
-      rightValue={formatInt(data?.weekly?.quotesCount.target ?? null)}
-      status={getStatus(
-        data?.weekly?.quotesCount.actual ?? null,
-        data?.weekly?.quotesCount.target ?? null
-      )}
-      accent="black"
-    />
-
-    <MetricRow
-      title={`Quotes Value (Week Ending ${data?.weekly?.weekEnding ?? ""})`}
-      leftLabel="Actual"
-      leftValue={formatMoney(data?.weekly?.quotesValue.actual ?? null)}
-      rightLabel="Goal"
-      rightValue={formatMoney(data?.weekly?.quotesValue.target ?? null)}
-      status={getStatus(
-        data?.weekly?.quotesValue.actual ?? null,
-        data?.weekly?.quotesValue.target ?? null
-      )}
-      accent="orange"
-    />
-  </div>
-)}
-          
-
-        {/* Gauge only on YTD */}
-        {tab === "YTD" ? (
-          <div className="mt-4">
-            <PaceGauge
-              actualYTD={data?.ytdActualRevenue ?? null}
-              expectedYTD={data?.ytdExpectedRevenue ?? null}
-              annualGoal={data?.salesGoalAnnual ?? null}
+            <MetricRow
+              title={`Quotes Value (${data?.monthly?.month ?? "This Month"})`}
+              leftLabel="Actual"
+              leftValue={formatMoney(data?.monthly?.quotesValue?.actual ?? null)}
+              rightLabel="Goal"
+              rightValue={formatMoney(data?.monthly?.quotesValue?.target ?? null)}
+              status={getStatus(
+                data?.monthly?.quotesValue?.actual ?? null,
+                data?.monthly?.quotesValue?.target ?? null
+              )}
+              accent="orange"
             />
           </div>
-        ) : null}
+        )}
+
+        {/* Weekly */}
+        {tab === "Weekly" && (
+          <div className="mt-5 space-y-3">
+            <MetricRow
+              title={`Revenue (Week Ending ${data?.weekly?.weekEnding ?? ""})`}
+              leftLabel="Actual"
+              leftValue={formatMoney(data?.weekly?.revenue?.actual ?? null)}
+              rightLabel="Goal"
+              rightValue={formatMoney(data?.weekly?.revenue?.target ?? null)}
+              status={getStatus(
+                data?.weekly?.revenue?.actual ?? null,
+                data?.weekly?.revenue?.target ?? null
+              )}
+              accent="orange"
+            />
+
+            <MetricRow
+              title={`Quotes Count (Week Ending ${data?.weekly?.weekEnding ?? ""})`}
+              leftLabel="Actual"
+              leftValue={formatInt(data?.weekly?.quotesCount?.actual ?? null)}
+              rightLabel="Goal"
+              rightValue={formatInt(data?.weekly?.quotesCount?.target ?? null)}
+              status={getStatus(
+                data?.weekly?.quotesCount?.actual ?? null,
+                data?.weekly?.quotesCount?.target ?? null
+              )}
+              accent="black"
+            />
+
+            <MetricRow
+              title={`Quotes Value (Week Ending ${data?.weekly?.weekEnding ?? ""})`}
+              leftLabel="Actual"
+              leftValue={formatMoney(data?.weekly?.quotesValue?.actual ?? null)}
+              rightLabel="Goal"
+              rightValue={formatMoney(data?.weekly?.quotesValue?.target ?? null)}
+              status={getStatus(
+                data?.weekly?.quotesValue?.actual ?? null,
+                data?.weekly?.quotesValue?.target ?? null
+              )}
+              accent="orange"
+            />
+          </div>
+        )}
 
         <div className="mt-4 text-xs text-black/50 text-center">
           {error ? (
