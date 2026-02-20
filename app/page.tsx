@@ -14,6 +14,7 @@ type DashboardData = {
   salesGoalAnnual: number | null;
   percentOfGoal: number | null;
 lastYearRevenue: number | null;
+  conversionRate: number | null;
   
   ytdActualRevenue: number;
   ytdExpectedRevenue: number;
@@ -282,14 +283,19 @@ export default function Page() {
   }, []);
 
   const ytdCards = useMemo(() => {
-    if (!data) return [];
-    return [
-      { label: "Sales Goal (Annual)", value: formatMoney(data.salesGoalAnnual) },
-      { label: "Sales YTD", value: formatMoney(data.salesYTD) },
-      { label: "Last Year Revenue", value: formatMoney(data.lastYearRevenue) },
-      { label: "% of Goal", value: formatPercent(data.percentOfGoal) },
-    ];
-  }, [data]);
+  if (!data) return [];
+  return [
+    // swapped order: YTD first, Goal second
+    { label: "Sales YTD", value: formatMoney(data.salesYTD) },
+    { label: "Sales Goal (Annual)", value: formatMoney(data.salesGoalAnnual) },
+
+    // % of goal on left
+    { label: "% of Goal", value: formatPercent(data.percentOfGoal) },
+
+    // replace last year with conversion rate on right
+    { label: "Conversion Rate", value: formatPercent(data.conversionRate) },
+  ];
+}, [data]);
 
   return (
     <main className="min-h-screen bg-[var(--pe-beige)] p-5">
