@@ -334,13 +334,13 @@ export default function Page() {
         </div>
 
         {/* YTD uses the 2x2 KPI cards */}
-{tab === "YTD" ? (
+{tab === "YTD" && (
   <div className="mt-5 grid grid-cols-2 gap-3">
     {cards.map((c) => (
       <Card key={c.label} label={c.label} value={c.value} />
     ))}
   </div>
-) : null}
+)}
 
 {/* Monthly / Weekly use stacked MetricRows */}
 {tab === "Monthly" && (
@@ -348,12 +348,12 @@ export default function Page() {
     <MetricRow
       title={`Revenue (${data?.monthly?.month ?? "This Month"})`}
       leftLabel="Actual"
-      leftValue={formatMoney(data?.monthly?.revenue.actual ?? null)}
+      leftValue={formatMoney(data?.monthly?.revenue?.actual ?? null)}
       rightLabel="Goal"
-      rightValue={formatMoney(data?.monthly?.revenue.target ?? null)}
+      rightValue={formatMoney(data?.monthly?.revenue?.target ?? null)}
       status={getStatus(
-        data?.monthly?.revenue.actual ?? null,
-        data?.monthly?.revenue.target ?? null
+        data?.monthly?.revenue?.actual ?? null,
+        data?.monthly?.revenue?.target ?? null
       )}
       accent="orange"
     />
@@ -361,12 +361,12 @@ export default function Page() {
     <MetricRow
       title={`Quotes Count (${data?.monthly?.month ?? "This Month"})`}
       leftLabel="Actual"
-      leftValue={formatInt(data?.monthly?.quotesCount.actual ?? null)}
+      leftValue={formatInt(data?.monthly?.quotesCount?.actual ?? null)}
       rightLabel="Goal"
-      rightValue={formatInt(data?.monthly?.quotesCount.target ?? null)}
+      rightValue={formatInt(data?.monthly?.quotesCount?.target ?? null)}
       status={getStatus(
-        data?.monthly?.quotesCount.actual ?? null,
-        data?.monthly?.quotesCount.target ?? null
+        data?.monthly?.quotesCount?.actual ?? null,
+        data?.monthly?.quotesCount?.target ?? null
       )}
       accent="black"
     />
@@ -374,12 +374,12 @@ export default function Page() {
     <MetricRow
       title={`Quotes Value (${data?.monthly?.month ?? "This Month"})`}
       leftLabel="Actual"
-      leftValue={formatMoney(data?.monthly?.quotesValue.actual ?? null)}
+      leftValue={formatMoney(data?.monthly?.quotesValue?.actual ?? null)}
       rightLabel="Goal"
-      rightValue={formatMoney(data?.monthly?.quotesValue.target ?? null)}
+      rightValue={formatMoney(data?.monthly?.quotesValue?.target ?? null)}
       status={getStatus(
-        data?.monthly?.quotesValue.actual ?? null,
-        data?.monthly?.quotesValue.target ?? null
+        data?.monthly?.quotesValue?.actual ?? null,
+        data?.monthly?.quotesValue?.target ?? null
       )}
       accent="orange"
     />
@@ -391,12 +391,12 @@ export default function Page() {
     <MetricRow
       title={`Revenue (Week Ending ${data?.weekly?.weekEnding ?? ""})`}
       leftLabel="Actual"
-      leftValue={formatMoney(data?.weekly?.revenue.actual ?? null)}
+      leftValue={formatMoney(data?.weekly?.revenue?.actual ?? null)}
       rightLabel="Goal"
-      rightValue={formatMoney(data?.weekly?.revenue.target ?? null)}
+      rightValue={formatMoney(data?.weekly?.revenue?.target ?? null)}
       status={getStatus(
-        data?.weekly?.revenue.actual ?? null,
-        data?.weekly?.revenue.target ?? null
+        data?.weekly?.revenue?.actual ?? null,
+        data?.weekly?.revenue?.target ?? null
       )}
       accent="orange"
     />
@@ -404,12 +404,12 @@ export default function Page() {
     <MetricRow
       title={`Quotes Count (Week Ending ${data?.weekly?.weekEnding ?? ""})`}
       leftLabel="Actual"
-      leftValue={formatInt(data?.weekly?.quotesCount.actual ?? null)}
+      leftValue={formatInt(data?.weekly?.quotesCount?.actual ?? null)}
       rightLabel="Goal"
-      rightValue={formatInt(data?.weekly?.quotesCount.target ?? null)}
+      rightValue={formatInt(data?.weekly?.quotesCount?.target ?? null)}
       status={getStatus(
-        data?.weekly?.quotesCount.actual ?? null,
-        data?.weekly?.quotesCount.target ?? null
+        data?.weekly?.quotesCount?.actual ?? null,
+        data?.weekly?.quotesCount?.target ?? null
       )}
       accent="black"
     />
@@ -417,12 +417,12 @@ export default function Page() {
     <MetricRow
       title={`Quotes Value (Week Ending ${data?.weekly?.weekEnding ?? ""})`}
       leftLabel="Actual"
-      leftValue={formatMoney(data?.weekly?.quotesValue.actual ?? null)}
+      leftValue={formatMoney(data?.weekly?.quotesValue?.actual ?? null)}
       rightLabel="Goal"
-      rightValue={formatMoney(data?.weekly?.quotesValue.target ?? null)}
+      rightValue={formatMoney(data?.weekly?.quotesValue?.target ?? null)}
       status={getStatus(
-        data?.weekly?.quotesValue.actual ?? null,
-        data?.weekly?.quotesValue.target ?? null
+        data?.weekly?.quotesValue?.actual ?? null,
+        data?.weekly?.quotesValue?.target ?? null
       )}
       accent="orange"
     />
