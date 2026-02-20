@@ -297,7 +297,7 @@ export default function Page() {
         <div className="rounded-3xl bg-white/60 p-5 border border-black/5">
           <div className="flex items-start justify-between gap-4">
             <div>
-              <div className="text-2xl font-extrabold text-[var(--pe-black)]">
+              <div className="text-xl font-extrabold text-[var(--pe-black)]">
                 PAINTERS ENTERPRISE DASHBOARD
               </div>
               <div className="mt-1 text-sm text-black/60">
