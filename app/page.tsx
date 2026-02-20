@@ -117,25 +117,25 @@ function MetricRow({
         <div className="min-w-0">
           <div className="text-sm font-extrabold text-black/70">{title}</div>
 
-          <div className="mt-2 grid grid-cols-2 gap-3">
-            <div>
-              <div className="text-xs font-semibold text-black/50">
-                {leftLabel}
-              </div>
-              <div className="mt-1 text-lg font-extrabold text-[var(--pe-black)]">
-                {leftValue}
-              </div>
-            </div>
+          <div className="mt-3 flex items-end justify-between">
+  <div>
+    <div className="text-xs font-semibold text-black/50">
+      {leftLabel}
+    </div>
+    <div className="mt-1 text-lg font-extrabold text-[var(--pe-black)]">
+      {leftValue}
+    </div>
+  </div>
 
-            <div>
-              <div className="text-xs font-semibold text-black/50">
-                {rightLabel}
-              </div>
-              <div className="mt-1 text-lg font-extrabold text-[var(--pe-black)]">
-                {rightValue}
-              </div>
-            </div>
-          </div>
+  <div className="text-right">
+    <div className="text-xs font-semibold text-black/50">
+      {rightLabel}
+    </div>
+    <div className="mt-1 text-lg font-extrabold text-[var(--pe-black)]">
+      {rightValue}
+    </div>
+  </div>
+</div>
         </div>
 
         <StatusChip status={status} />
