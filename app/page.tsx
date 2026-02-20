@@ -148,115 +148,94 @@ function MetricRow({
   );
 }
 
-function PaceGauge({
+function PaceBar({
   actualYTD,
   expectedYTD,
-  annualGoal,
 }: {
   actualYTD: number | null;
   expectedYTD: number | null;
-  annualGoal: number | null;
 }) {
   const actual = actualYTD ?? null;
   const expected = expectedYTD ?? null;
 
-  const cushionPct = 0.02;
+  if (actual == null || expected == null || expected === 0) {
+    return (
+      <div className="rounded-2xl bg-[var(--pe-card)] p-5 shadow-sm border border-black/5">
+        <div className="text-sm font-semibold tracking-wide text-black/60">
+          Pace Status
+        </div>
+        <div className="mt-2 text-sm text-black/60">—</div>
+      </div>
+    );
+  }
+
+  const ratio = actual / expected; // 1.0 = on pace
+  const pct = ratio * 100;
+
+  // Color logic:
+  // Red: < 95%
+  // Green: 95–115%
+  // Orange: > 115%
   const status =
-    actual == null || expected == null
-      ? "—"
-      : actual >= expected * (1 + cushionPct)
-      ? "Ahead of Pace"
-      : actual <= expected * (1 - cushionPct)
-      ? "Behind Pace"
-      : "On Pace";
+    ratio < 0.95 ? "Below Pace" : ratio > 1.15 ? "Way Above Pace" : "On Pace";
 
-  const pctOfAnnual =
-    actual != null && annualGoal != null && annualGoal > 0 ? actual / annualGoal : null;
+  const colorClass =
+    ratio < 0.95
+      ? "bg-red-500"
+      : ratio > 1.15
+      ? "bg-[var(--pe-orange)]"
+      : "bg-green-600";
 
-  const radius = 44;
-  const stroke = 10;
-  const cx = 56;
-  const cy = 56;
-  const circumference = 2 * Math.PI * radius;
+  // Bar fill capped so it doesn't explode
+  const fill = Math.max(0, Math.min(pct, 160)); // cap at 160%
+  const fillWidth = `${fill}%`;
 
-  const clamped = pctOfAnnual == null ? 0 : Math.max(0, Math.min(pctOfAnnual, 1.2));
-  const progress = Math.min(clamped, 1);
-  const dash = circumference * (1 - progress);
-
-  const actualText = pctOfAnnual == null ? "—" : `${Math.round(pctOfAnnual * 100)}%`;
-  const diff = actual == null || expected == null ? null : actual - expected;
+  const diff = actual - expected;
 
   return (
     <div className="rounded-2xl bg-[var(--pe-card)] p-5 shadow-sm border border-black/5">
-      <div className="text-sm font-semibold tracking-wide text-black/60">
-        Pace Gauge (Plan vs Actual)
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <div className="text-sm font-semibold tracking-wide text-black/60">
+            Pace Status
+          </div>
+          <div className="mt-1 text-lg font-extrabold text-[var(--pe-black)]">
+            {status}
+          </div>
+        </div>
+
+        <div className="text-right">
+          <div className="text-xs font-semibold text-black/50">Actual vs Expected</div>
+          <div className="mt-1 text-sm font-extrabold text-[var(--pe-black)]">
+            {Math.round(pct)}%
+          </div>
+        </div>
       </div>
 
-      <div className="mt-3 flex items-center gap-4">
-        <svg width="112" height="112" viewBox="0 0 112 112" className="shrink-0">
-          <circle
-            cx={cx}
-            cy={cy}
-            r={radius}
-            fill="none"
-            stroke="rgba(0,0,0,0.10)"
-            strokeWidth={stroke}
-          />
-          <circle
-            cx={cx}
-            cy={cy}
-            r={radius}
-            fill="none"
-            stroke="currentColor"
-            className="text-[var(--pe-orange)]"
-            strokeWidth={stroke}
-            strokeLinecap="round"
-            strokeDasharray={circumference}
-            strokeDashoffset={dash}
-            transform={`rotate(-90 ${cx} ${cy})`}
-          />
-          <text
-            x="56"
-            y="54"
-            textAnchor="middle"
-            dominantBaseline="middle"
-            fontSize="20"
-            fontWeight="800"
-            fill="rgba(0,0,0,0.85)"
-          >
-            {actualText}
-          </text>
-          <text
-            x="56"
-            y="74"
-            textAnchor="middle"
-            dominantBaseline="middle"
-            fontSize="10"
-            fontWeight="700"
-            fill="rgba(0,0,0,0.55)"
-          >
-            {status}
-          </text>
-        </svg>
+      <div className="mt-3 h-3 w-full rounded-full bg-black/10 overflow-hidden">
+        <div className={`h-full ${colorClass}`} style={{ width: fillWidth }} />
+      </div>
 
-        <div className="min-w-0">
-          <div className="text-sm font-extrabold text-[var(--pe-black)]">
-            {status}
-          </div>
+      <div className="mt-3 grid grid-cols-2 gap-3 text-sm">
+        <div className="text-black/60">
+          Actual: <span className="font-bold text-[var(--pe-black)]">{formatMoney(actual)}</span>
+        </div>
+        <div className="text-black/60 text-right">
+          Expected:{" "}
+          <span className="font-bold text-[var(--pe-black)]">{formatMoney(expected)}</span>
+        </div>
 
-          <div className="mt-1 text-sm text-black/60">
-            Actual YTD: <span className="font-bold">{formatMoney(actual)}</span>
-          </div>
-          <div className="mt-1 text-sm text-black/60">
-            Expected YTD: <span className="font-bold">{formatMoney(expected)}</span>
-          </div>
-
-          <div className="mt-2 text-xs text-black/55">
-            Difference:{" "}
-            <span className="font-bold">
-              {diff == null ? "—" : formatMoney(diff)}
-            </span>
-          </div>
+        <div className="text-black/60">
+          Difference:{" "}
+          <span className="font-bold text-[var(--pe-black)]">
+            {formatMoney(diff)}
+          </span>
+        </div>
+        <div className="text-black/60 text-right">
+          Ratio:{" "}
+          <span className="font-bold text-[var(--pe-black)]">
+            {ratio.toFixed(2)}x
+          </span>
         </div>
       </div>
     </div>
