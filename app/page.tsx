@@ -141,9 +141,23 @@ function MetricRow({
         <StatusChip status={status} />
       </div>
 
-      <div className="mt-4 h-1.5 w-full rounded-full bg-black/5 overflow-hidden">
-        <div className={`h-full w-1/2 ${accentBar} rounded-full`} />
-      </div>
+      {(() => {
+  const actualNum = Number(leftValue?.replace(/[^0-9.-]+/g, ""));
+  const goalNum = Number(rightValue?.replace(/[^0-9.-]+/g, ""));
+  const ratio =
+    !isNaN(actualNum) && !isNaN(goalNum) && goalNum > 0
+      ? Math.min(actualNum / goalNum, 1.4)
+      : 0;
+
+  return (
+    <div className="mt-4 h-2 w-full rounded-full bg-black/10 overflow-hidden">
+      <div
+        className={`h-full ${accentBar} rounded-full transition-all duration-500`}
+        style={{ width: `${ratio * 100}%` }}
+      />
+    </div>
+  );
+})()}
     </div>
   );
 }
