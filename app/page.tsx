@@ -325,11 +325,14 @@ async function load() {
             </div>
 
             <button
-              onClick={load}
-              className="rounded-full bg-[var(--pe-orange)] px-4 py-2 text-sm font-bold text-white shadow-sm"
-            >
-              Refresh
-            </button>
+  onClick={load}
+  disabled={loading}
+  className={`rounded-full px-4 py-2 text-sm font-bold text-white shadow-sm ${
+    loading ? "bg-black/40" : "bg-[var(--pe-orange)]"
+  }`}
+>
+  {loading ? "Refreshing..." : "Refresh"}
+</button>
           </div>
 
           <div className="mt-4 flex gap-2">
