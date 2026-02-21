@@ -253,6 +253,7 @@ function PaceBar({
 }
 
 export default function Page() {
+  const brandName = process.env.NEXT_PUBLIC_BRAND_NAME || "Sales Goal Path";
   const [tab, setTab] = useState<"YTD" | "Monthly" | "Weekly">("YTD");
   const [data, setData] = useState<DashboardData | null>(null);
   const [error, setError] = useState<string | null>(null);
