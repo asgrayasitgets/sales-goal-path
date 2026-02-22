@@ -15,6 +15,10 @@ export default function RootLayout({
   lang="en"
   style={
     {
+      "--btn-bg": process.env.NEXT_PUBLIC_BRAND_BUTTON_BG || "#212721",
+      "--btn-text": process.env.NEXT_PUBLIC_BRAND_BUTTON_TEXT || "#ffffff",
+      "--tab-active-bg": process.env.NEXT_PUBLIC_TAB_ACTIVE_BG || "#212721",
+      "--tab-active-text": process.env.NEXT_PUBLIC_TAB_ACTIVE_TEXT || "#ffffff",
       "--tab-inactive-bg": process.env.NEXT_PUBLIC_TAB_INACTIVE_BG,
       "--tab-inactive-text": process.env.NEXT_PUBLIC_TAB_INACTIVE_TEXT,"--brand-card": process.env.NEXT_PUBLIC_BRAND_CARD,
       "--brand-bg": process.env.NEXT_PUBLIC_BRAND_BG,
