@@ -11,7 +11,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html
+  lang="en"
+  style={
+    {
+      "--brand-bg": process.env.NEXT_PUBLIC_BRAND_BG,
+      "--brand-text": process.env.NEXT_PUBLIC_BRAND_TEXT,
+      "--brand-accent": process.env.NEXT_PUBLIC_BRAND_ACCENT,
+      "--brand-muted": process.env.NEXT_PUBLIC_BRAND_MUTED,
+    } as React.CSSProperties
+  }
+>
       <body>{children}</body>
     </html>
   );
