@@ -20,6 +20,10 @@ export default function RootLayout({
       "--brand-text": process.env.NEXT_PUBLIC_BRAND_TEXT,
       "--brand-accent": process.env.NEXT_PUBLIC_BRAND_ACCENT,
       "--brand-muted": process.env.NEXT_PUBLIC_BRAND_MUTED,
+      "--header-bg": process.env.NEXT_PUBLIC_HEADER_BG,
+      "--header-text": process.env.NEXT_PUBLIC_HEADER_TEXT,
+      "--header-button-bg": process.env.NEXT_PUBLIC_HEADER_BUTTON_BG,
+      "--header-button-text": process.env.NEXT_PUBLIC_HEADER_BUTTON_TEXT,
     } as React.CSSProperties
   }
 >
