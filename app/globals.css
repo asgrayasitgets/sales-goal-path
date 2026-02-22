@@ -4,7 +4,10 @@
 
 :root {
   /* Brand-driven theme (per Vercel project env vars) */
-  --pe-beige: var(--brand-bg, #F1EFE7);
+    --btn-bg: #212721;
+  --btn-text: #ffffff;
+  --tab-active-bg: #212721;
+  --tab-active-text: #ffffff;--pe-beige: var(--brand-bg, #F1EFE7);
   --pe-black: var(--brand-text, #212721);
   --pe-orange: var(--brand-accent, #CAB448);
   --pe-muted: var(--brand-muted, #F1EFE7);
