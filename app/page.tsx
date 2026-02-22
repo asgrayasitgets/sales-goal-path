@@ -285,22 +285,21 @@ async function load() {
     load();
   }, []);
 
-  const ytdCards = useMemo(() => {
-  if (!data) return [];
-  return [
-    // swapped order: YTD first, Goal second
-    { label: "Sales YTD", value: formatMoney(data.salesYTD) },
-    { label: "Sales Goal (Annual)", value: formatMoney(data.salesGoalAnnual) },
+    const ytdCards = useMemo(() => {
+    if (!data) return [];
+    return [
+      // swapped order: YTD first, Goal second
+      { label: "Sales YTD", value: formatMoney(data.salesYTD) },
+      { label: "Sales Goal (Annual)", value: formatMoney(data.salesGoalAnnual) },
 
-    // % of goal on left
-    { label: "% of Goal", value: formatPercent(data.percentOfGoal) },
+      // % of goal on left
+      { label: "% of Goal", value: formatPercent(data.percentOfGoal) },
 
-    // replace last year with conversion rate on right
-    { label: "Conversion Rate", value: formatPercent(data.conversionRate) },
-  ];
-}, [data]);
+      // replace last year with conversion rate on right
+      { label: "Conversion Rate", value: formatPercent(data.conversionRate) },
+    ];
+  }, [data]);
   
-export default function Home() {
   return (
     <main className="min-h-screen bg-[var(--pe-beige)] p-5">
       <div className="mx-auto max-w-md">
