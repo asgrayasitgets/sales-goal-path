@@ -349,7 +349,7 @@ async function load() {
             <div className="mt-5 grid grid-cols-2 gap-3">
               {ytdCards.map((c) => (
                 <Card key={c.label} label={c.label} value={c.value} />
-              ))}
+              )}
             </div>
 
             <div className="mt-4">
