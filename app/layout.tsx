@@ -15,6 +15,7 @@ export default function RootLayout({
   lang="en"
   style={
     {
+      "--brand-card": process.env.NEXT_PUBLIC_BRAND_CARD,
       "--brand-bg": process.env.NEXT_PUBLIC_BRAND_BG,
       "--brand-text": process.env.NEXT_PUBLIC_BRAND_TEXT,
       "--brand-accent": process.env.NEXT_PUBLIC_BRAND_ACCENT,
