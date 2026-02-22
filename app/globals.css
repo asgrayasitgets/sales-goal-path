@@ -7,7 +7,7 @@
   --pe-beige: var(--brand-bg, #F1EFE7);
   --pe-black: var(--brand-text, #212721);
   --pe-orange: var(--brand-accent, #CAB448);
-  --pe-muted: var(--brand-muted, #6F7271);
+  --pe-muted: var(--brand-muted, #F1EFE7);
 
   /* Card surface */
   --pe-card: rgba(255, 255, 255, 0.65);
