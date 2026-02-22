@@ -10,7 +10,7 @@
   --pe-muted: var(--brand-muted, #F1EFE7);
 
   /* Card surface */
-  --pe-card: rgba(255, 255, 255, 0.65);
+  --pe-card: var(--brand-card, rgba(255, 255, 255, 0.65));
 }
 
 html, body {
