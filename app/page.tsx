@@ -299,7 +299,8 @@ async function load() {
     { label: "Conversion Rate", value: formatPercent(data.conversionRate) },
   ];
 }, [data]);
-
+  
+export default function Home() {
   return (
     <main className="min-h-screen bg-[var(--pe-beige)] p-5">
       <div className="mx-auto max-w-md">
