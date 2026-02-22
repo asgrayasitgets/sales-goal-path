@@ -15,7 +15,8 @@ export default function RootLayout({
   lang="en"
   style={
     {
-      "--brand-card": process.env.NEXT_PUBLIC_BRAND_CARD,
+      "--tab-inactive-bg": process.env.NEXT_PUBLIC_TAB_INACTIVE_BG,
+      "--tab-inactive-text": process.env.NEXT_PUBLIC_TAB_INACTIVE_TEXT,"--brand-card": process.env.NEXT_PUBLIC_BRAND_CARD,
       "--brand-bg": process.env.NEXT_PUBLIC_BRAND_BG,
       "--brand-text": process.env.NEXT_PUBLIC_BRAND_TEXT,
       "--brand-accent": process.env.NEXT_PUBLIC_BRAND_ACCENT,
