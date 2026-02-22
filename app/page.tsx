@@ -333,8 +333,8 @@ async function load() {
                 className={[
                   "flex-1 rounded-full px-3 py-2 text-sm font-bold",
                   tab === t
-                    ? "bg-[var(--pe-black)] text-white"
-                    : "bg-white/80 text-[var(--pe-black)] border border-black/10",
+                    ? "bg-[var(--header-button-bg)] text-white"
+                    : "bg-white/80 text-[var(--header-button-text)] border border-black/10",
                 ].join(" ")}
               >
                 {t}
