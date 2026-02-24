@@ -309,7 +309,7 @@ async function load() {
               <div className="text-xl font-extrabold text-[var(--pe-tan)]">
                 {brandName}
               </div>
-              <div className="mt-1 text-sm text-white">
+              <div className="mt-1 text-sm text-pe-tan">
                 Live dashboard powered by Google Sheet data
               </div>
             </div>
