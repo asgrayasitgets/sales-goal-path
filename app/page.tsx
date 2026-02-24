@@ -334,7 +334,7 @@ async function load() {
                   "flex-1 rounded-full px-3 py-2 text-sm font-bold",
                   tab === t
   ? "bg-[var(--tab-active-bg)] text-[var(--tab-active-text)]"
-  : "bg-pe-tan text-[var(--header-button-text)] border border-black/10",
+  : "bg-white/90 text-[var(--header-button-text)] border border-black/10",
                 ].join(" ")}
               >
                 {t}
