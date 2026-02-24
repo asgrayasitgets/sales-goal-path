@@ -306,10 +306,10 @@ async function load() {
         <div className="rounded-3xl bg-[var(--header-bg)] text-[var(--header-text)] p-5 border border-black/5">
           <div className="flex items-start justify-between gap-4">
             <div>
-              <div className="text-xl font-extrabold text-[var(--pe-black)]">
+              <div className="text-xl font-extrabold text-[var(--pe-tan)]">
                 {brandName}
               </div>
-              <div className="mt-1 text-sm text-black/60">
+              <div className="mt-1 text-sm text-white">
                 Live dashboard powered by Google Sheet data
               </div>
             </div>
