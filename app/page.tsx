@@ -332,7 +332,7 @@ async function load() {
   onClick={load}
   disabled={loading}
   className={`rounded-full px-4 py-2 text-sm font-bold shadow-sm ${
-  loading ? "bg-black/40 text-white" : "bg-[var(--btn-bg)] text-[var(--btn-text)]"
+  loading ? "bg-transparent border border-black/25 shadow-none"
 }`}
 >
   {loading ? "Refreshing..." : "Refresh"}
