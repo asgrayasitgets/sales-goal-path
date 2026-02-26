@@ -393,7 +393,7 @@ async function load() {
   useEffect(() => {
     load();
   }, []);
-}
+
     const ytdCards = useMemo(() => {
     if (!data) return [];
     return [
