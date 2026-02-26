@@ -107,25 +107,21 @@ function StatusChip({
   );
 }
 
-function MetricRowStacked({
+function MetricRow({
   title,
   leftLabel,
-  leftTop,
-  leftBottom,
+  leftValue,
   rightLabel,
-  rightTop,
-  rightBottom,
+  rightValue,
   status,
   accent = "orange",
   className = "",
 }: {
   title: string;
   leftLabel: string;
-  leftTop: string;
-  leftBottom: string;
+  leftValue: string;
   rightLabel: string;
-  rightTop: string;
-  rightBottom: string;
+  rightValue: string;
   status: "Ahead" | "On Pace" | "Behind";
   accent?: "orange" | "black";
   className?: string;
@@ -133,9 +129,9 @@ function MetricRowStacked({
   const accentBar =
     accent === "orange" ? "bg-[var(--pe-orange)]" : "bg-[var(--pe-black)]";
 
-  // progress bar should use the TOP numbers (count), not dollars
-  const actualNum = Number(leftTop?.replace(/[^0-9.-]+/g, ""));
-  const goalNum = Number(rightTop?.replace(/[^0-9.-]+/g, ""));
+  // Progress bar ratio (based on numeric parsing of the displayed strings)
+  const actualNum = Number((leftValue ?? "").replace(/[^0-9.-]+/g, ""));
+  const goalNum = Number((rightValue ?? "").replace(/[^0-9.-]+/g, ""));
   const ratio =
     !isNaN(actualNum) && !isNaN(goalNum) && goalNum > 0
       ? Math.min(actualNum / goalNum, 1.4)
@@ -151,26 +147,20 @@ function MetricRowStacked({
 
           <div className="mt-3 flex items-end justify-between gap-8">
             <div className="max-w-[45%]">
-              <div className="text-xs font-semibold text-black/50">{leftLabel}</div>
-
-              <div className="mt-1 text-lg font-extrabold text-[var(--pe-black)]">
-                {leftTop}
+              <div className="text-xs font-semibold text-black/50">
+                {leftLabel}
               </div>
-
-              <div className="mt-1 text-sm font-bold text-black/60">
-                {leftBottom}
+              <div className="mt-1 text-lg font-extrabold text-[var(--pe-black)]">
+                {leftValue}
               </div>
             </div>
 
             <div className="ml-auto text-right">
-              <div className="text-xs font-semibold text-black/50">{rightLabel}</div>
-
-              <div className="mt-1 text-lg font-extrabold text-[var(--pe-black)]">
-                {rightTop}
+              <div className="text-xs font-semibold text-black/50">
+                {rightLabel}
               </div>
-
-              <div className="mt-1 text-sm font-bold text-black/60">
-                {rightBottom}
+              <div className="mt-1 text-lg font-extrabold text-[var(--pe-black)]">
+                {rightValue}
               </div>
             </div>
           </div>
@@ -188,7 +178,6 @@ function MetricRowStacked({
     </div>
   );
 }
-
       {(() => {
   const actualNum = Number(leftValue?.replace(/[^0-9.-]+/g, ""));
   const goalNum = Number(rightValue?.replace(/[^0-9.-]+/g, ""));
