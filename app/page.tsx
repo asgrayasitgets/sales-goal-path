@@ -412,7 +412,7 @@ async function load() {
     data?.monthly?.quotesCount?.target ?? null
   )}
   accent="black"
-  className="bg-white border border-black/15 shadow-sm"
+  className="bg-transparent border border-black/25 shadow-none"
 />
 
             <MetricRow
