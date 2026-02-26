@@ -118,7 +118,7 @@ function MetricRow({
     accent === "orange" ? "bg-[var(--pe-orange)]" : "bg-[var(--pe-black)]";
 
   return (
-    <div className="rounded-2xl bg-[var(--pe-card)] p-5 shadow-sm border border-black/5">
+    <div className={`rounded-2xl bg-[var(--pe-card)] p-5 shadow-sm border border-black/10 ${className}`}>
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
           <div className="text-sm font-extrabold text-black/70">{title}</div>
