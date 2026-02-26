@@ -479,7 +479,12 @@ async function load() {
 
         {/* Monthly */}
         {tab === "Monthly" && (
-          <div className="mt-5 space-y-3">
+          <div
+  className={[
+    "rounded-2xl p-5 shadow-sm border border-black/10",
+    className || "bg-[var(--pe-card)]",
+  ].join(" ")}
+>
             <MetricRow
               title={`Revenue (${data?.monthly?.month ?? "This Month"})`}
               leftLabel="Actual"
@@ -526,7 +531,12 @@ async function load() {
 
         {/* Weekly */}
         {tab === "Weekly" && (
-          <div className="mt-5 space-y-3">
+          <div
+  className={[
+    "rounded-2xl p-5 shadow-sm border border-black/10",
+    className || "bg-[var(--pe-card)]",
+  ].join(" ")}
+>
             <MetricRow
               title={`Revenue (Week Ending ${data?.weekly?.weekEnding ?? ""})`}
               leftLabel="Actual"
