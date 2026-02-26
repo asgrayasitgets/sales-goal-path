@@ -296,8 +296,7 @@ const monthly =
   const todayKey = todayKeyInTimeZone(BUSINESS_TIMEZONE);
   const weekRow = findCurrentWeekRow(grid, todayKey);
 
-  const weekly =
-    const weekly =
+ const weekly =
   weekRow == null
     ? null
     : {
@@ -307,15 +306,15 @@ const monthly =
           actual: toNumber(getCellRC(grid, weekRow, 3)), // C
         },
         quotesCount: {
-          target: toNumber(getCellRC(grid, weekRow, 8)),  // H
+          target: toNumber(getCellRC(grid, weekRow, 8)), // H
           actual: toNumber(getCellRC(grid, weekRow, 10)), // J
         },
         quotesValue: {
-          target: toNumber(getCellRC(grid, weekRow, 7)), // G
-          actual: toNumber(getCellRC(grid, weekRow, 9)),  // I
+          target: toNumber(getCellRC(grid, weekRow, 7)), // G (assumed)
+          actual: toNumber(getCellRC(grid, weekRow, 9)), // I (assumed)
         },
 
-        // ✅ Jobs Landed
+        // Jobs Landed (K–N)
         jobsLandedValue: {
           target: toNumber(getCellRC(grid, weekRow, 11)), // K
           actual: toNumber(getCellRC(grid, weekRow, 13)), // M
@@ -327,7 +326,7 @@ const monthly =
 
         sourceRow: weekRow,
       };
-
+  
   return NextResponse.json({
     salesGoalAnnual,
     salesYTD,
