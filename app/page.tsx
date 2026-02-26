@@ -141,7 +141,7 @@ function MetricRow({
         <div className="min-w-0">
           <div className="text-sm font-extrabold text-black/70">{title}</div>
 
-          <div className="mt-3 flex items-end justify-between gap-8">
+          <div className="mt-3 flex items-end justify-between">
             <div className="max-w-[45%]">
               <div className="text-xs font-semibold text-black/50">
                 {leftLabel}
@@ -222,7 +222,7 @@ function MetricRowStacked({
         <div className="min-w-0">
           <div className="text-sm font-extrabold text-black/70">{title}</div>
 
-          <div className="mt-3 flex items-end justify-between gap-8">
+          <div className="mt-3 flex items-end justify-between">
             <div className="max-w-[45%]">
               <div className="text-xs font-semibold text-black/50">
                 {leftLabel}
