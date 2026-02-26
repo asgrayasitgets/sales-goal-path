@@ -106,6 +106,76 @@ function StatusChip({
     </span>
   );
 }
+function MetricRow({
+  title,
+  leftLabel,
+  leftValue,
+  rightLabel,
+  rightValue,
+  status,
+  accent = "orange",
+  className = "",
+}: {
+  title: string;
+  leftLabel: string;
+  leftValue: string;
+  rightLabel: string;
+  rightValue: string;
+  status: "Ahead" | "On Pace" | "Behind";
+  accent?: "orange" | "black";
+  className?: string;
+}) {
+  const accentBar =
+    accent === "orange" ? "bg-[var(--pe-orange)]" : "bg-[var(--pe-black)]";
+
+  const actualNum = Number((leftValue ?? "").replace(/[^0-9.-]+/g, ""));
+  const goalNum = Number((rightValue ?? "").replace(/[^0-9.-]+/g, ""));
+  const ratio =
+    !isNaN(actualNum) && !isNaN(goalNum) && goalNum > 0
+      ? Math.min(actualNum / goalNum, 1.4)
+      : 0;
+
+  return (
+    <div
+      className={`rounded-2xl bg-[var(--pe-card)] p-5 shadow-sm border border-black/10 ${className}`}
+    >
+      <div className="flex items-start justify-between gap-3">
+        <div className="min-w-0">
+          <div className="text-sm font-extrabold text-black/70">{title}</div>
+
+          <div className="mt-3 flex items-end justify-between gap-8">
+            <div className="max-w-[45%]">
+              <div className="text-xs font-semibold text-black/50">
+                {leftLabel}
+              </div>
+              <div className="mt-1 text-lg font-extrabold text-[var(--pe-black)]">
+                {leftValue}
+              </div>
+            </div>
+
+            <div className="ml-auto text-right">
+              <div className="text-xs font-semibold text-black/50">
+                {rightLabel}
+              </div>
+              <div className="mt-1 text-lg font-extrabold text-[var(--pe-black)]">
+                {rightValue}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <StatusChip status={status} />
+      </div>
+
+      <div className="mt-4 h-2 w-full rounded-full bg-black/10 overflow-hidden">
+        <div
+          className={`h-full ${accentBar} rounded-full transition-all duration-500`}
+          style={{ width: `${ratio * 100}%` }}
+        />
+      </div>
+    </div>
+  );
+}
 
 function MetricRowStacked({
   title,
