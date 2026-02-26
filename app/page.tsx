@@ -103,6 +103,7 @@ function MetricRow({
   rightValue,
   status,
   accent = "orange",
+  className = "",
 }: {
   title: string;
   leftLabel: string;
@@ -111,6 +112,7 @@ function MetricRow({
   rightValue: string;
   status: "Ahead" | "On Pace" | "Behind";
   accent?: "orange" | "black";
+  className?: string;
 }) {
   const accentBar =
     accent === "orange" ? "bg-[var(--pe-orange)]" : "bg-[var(--pe-black)]";
