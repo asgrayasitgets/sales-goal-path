@@ -207,7 +207,7 @@ function MetricRowStacked({
   );
 })()}
 
-</div> {/* ✅ ADD THIS LINE */}
+</div> 
 
 </div>
 );
