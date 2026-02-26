@@ -579,3 +579,16 @@ async function load() {
     />
   </div>
 )}
+        <div className="mt-4 text-xs text-black/50 text-center">
+          {error ? (
+            <span className="text-red-600">{error}</span>
+          ) : data?.fetchedAt ? (
+            <>Last updated: {new Date(data.fetchedAt).toLocaleString()}</>
+          ) : (
+            "Loading…"
+          )}
+        </div>
+      </div>
+    </main>
+  );
+}
