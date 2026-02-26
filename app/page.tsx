@@ -60,7 +60,7 @@ function Card({
     <div
       className={[
         "rounded-3xl p-4",
-        "bg-white border border-black/10 shadow-sm",
+        "bg-transparent border border-black/25 shadow-none",
         className,
       ].join(" ")}
     >
