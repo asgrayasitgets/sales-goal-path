@@ -107,21 +107,25 @@ function StatusChip({
   );
 }
 
-function MetricRow({
+function MetricRowStacked({
   title,
   leftLabel,
-  leftValue,
+  leftTop,
+  leftBottom,
   rightLabel,
-  rightValue,
+  rightTop,
+  rightBottom,
   status,
   accent = "orange",
   className = "",
 }: {
   title: string;
   leftLabel: string;
-  leftValue: string;
+  leftTop: string;
+  leftBottom: string;
   rightLabel: string;
-  rightValue: string;
+  rightTop: string;
+  rightBottom: string;
   status: "Ahead" | "On Pace" | "Behind";
   accent?: "orange" | "black";
   className?: string;
@@ -129,9 +133,9 @@ function MetricRow({
   const accentBar =
     accent === "orange" ? "bg-[var(--pe-orange)]" : "bg-[var(--pe-black)]";
 
-  // Progress bar ratio (based on numeric parsing of the displayed strings)
-  const actualNum = Number((leftValue ?? "").replace(/[^0-9.-]+/g, ""));
-  const goalNum = Number((rightValue ?? "").replace(/[^0-9.-]+/g, ""));
+  // progress bar uses TOP numbers (count)
+  const actualNum = Number((leftTop ?? "").replace(/[^0-9.-]+/g, ""));
+  const goalNum = Number((rightTop ?? "").replace(/[^0-9.-]+/g, ""));
   const ratio =
     !isNaN(actualNum) && !isNaN(goalNum) && goalNum > 0
       ? Math.min(actualNum / goalNum, 1.4)
@@ -150,8 +154,13 @@ function MetricRow({
               <div className="text-xs font-semibold text-black/50">
                 {leftLabel}
               </div>
+
               <div className="mt-1 text-lg font-extrabold text-[var(--pe-black)]">
-                {leftValue}
+                {leftTop}
+              </div>
+
+              <div className="mt-1 text-sm font-bold text-black/60">
+                {leftBottom}
               </div>
             </div>
 
@@ -159,8 +168,13 @@ function MetricRow({
               <div className="text-xs font-semibold text-black/50">
                 {rightLabel}
               </div>
+
               <div className="mt-1 text-lg font-extrabold text-[var(--pe-black)]">
-                {rightValue}
+                {rightTop}
+              </div>
+
+              <div className="mt-1 text-sm font-bold text-black/60">
+                {rightBottom}
               </div>
             </div>
           </div>
