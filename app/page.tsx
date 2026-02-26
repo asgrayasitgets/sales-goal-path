@@ -212,11 +212,13 @@ function MetricRowStacked({
 
   return (
     <div
-  className={[
-    "rounded-2xl p-5 shadow-sm border border-black/10",
-    className || "bg-[var(--pe-card)]",
-  ].join(" ")}
->
+      className={[
+        "rounded-2xl p-5 shadow-sm border border-black/10",
+        className && className.trim().length > 0
+          ? className
+          : "bg-[var(--pe-card)]",
+      ].join(" ")}
+    >
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
           <div className="text-sm font-extrabold text-black/70">{title}</div>
@@ -264,7 +266,7 @@ function MetricRowStacked({
     </div>
   );
 }
-
+}
 function PaceBar({
   actualYTD,
   expectedYTD,
