@@ -437,32 +437,20 @@ async function load() {
               accent="orange"
             />
 
-            <MetricRow
-  title={`Quotes Count (${data?.monthly?.month ?? "This Month"})`}
+            <MetricRowStacked
+  title={`Quotes (${data?.monthly?.month ?? "This Month"})`}
   leftLabel="Actual"
-  leftValue={formatInt(data?.monthly?.quotesCount?.actual ?? null)}
+  leftTop={formatInt(data?.monthly?.quotesCount?.actual ?? null)}
+  leftBottom={formatMoney(data?.monthly?.quotesValue?.actual ?? null)}
   rightLabel="Goal"
-  rightValue={formatInt(data?.monthly?.quotesCount?.target ?? null)}
+  rightTop={formatInt(data?.monthly?.quotesCount?.target ?? null)}
+  rightBottom={formatMoney(data?.monthly?.quotesValue?.target ?? null)}
   status={getStatus(
     data?.monthly?.quotesCount?.actual ?? null,
     data?.monthly?.quotesCount?.target ?? null
   )}
   accent="black"
-  className="bg-transparent border border-black/25 shadow-none"
 />
-
-            <MetricRow
-              title={`Quotes Value (${data?.monthly?.month ?? "This Month"})`}
-              leftLabel="Actual"
-              leftValue={formatMoney(data?.monthly?.quotesValue?.actual ?? null)}
-              rightLabel="Goal"
-              rightValue={formatMoney(data?.monthly?.quotesValue?.target ?? null)}
-              status={getStatus(
-                data?.monthly?.quotesValue?.actual ?? null,
-                data?.monthly?.quotesValue?.target ?? null
-              )}
-              accent="orange"
-            />
           </div>
         )}
 
@@ -482,31 +470,20 @@ async function load() {
               accent="orange"
             />
 
-            <MetricRow
-              title={`Quotes Count (Week Ending ${data?.weekly?.weekEnding ?? ""})`}
-              leftLabel="Actual"
-              leftValue={formatInt(data?.weekly?.quotesCount?.actual ?? null)}
-              rightLabel="Goal"
-              rightValue={formatInt(data?.weekly?.quotesCount?.target ?? null)}
-              status={getStatus(
-                data?.weekly?.quotesCount?.actual ?? null,
-                data?.weekly?.quotesCount?.target ?? null
-              )}
-              accent="black"
-            />
-
-            <MetricRow
-              title={`Quotes Value (Week Ending ${data?.weekly?.weekEnding ?? ""})`}
-              leftLabel="Actual"
-              leftValue={formatMoney(data?.weekly?.quotesValue?.actual ?? null)}
-              rightLabel="Goal"
-              rightValue={formatMoney(data?.weekly?.quotesValue?.target ?? null)}
-              status={getStatus(
-                data?.weekly?.quotesValue?.actual ?? null,
-                data?.weekly?.quotesValue?.target ?? null
-              )}
-              accent="orange"
-            />
+            <MetricRowStacked
+  title={`Quotes (Week Ending ${data?.weekly?.weekEnding ?? ""})`}
+  leftLabel="Actual"
+  leftTop={formatInt(data?.weekly?.quotesCount?.actual ?? null)}
+  leftBottom={formatMoney(data?.weekly?.quotesValue?.actual ?? null)}
+  rightLabel="Goal"
+  rightTop={formatInt(data?.weekly?.quotesCount?.target ?? null)}
+  rightBottom={formatMoney(data?.weekly?.quotesValue?.target ?? null)}
+  status={getStatus(
+    data?.weekly?.quotesCount?.actual ?? null,
+    data?.weekly?.quotesCount?.target ?? null
+  )}
+  accent="black"
+/>
           </div>
         )}
 
