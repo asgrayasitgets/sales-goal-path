@@ -103,21 +103,25 @@ function StatusChip({
   );
 }
 
-function MetricRow({
+function MetricRowStacked({
   title,
   leftLabel,
-  leftValue,
+  leftTop,
+  leftBottom,
   rightLabel,
-  rightValue,
+  rightTop,
+  rightBottom,
   status,
   accent = "orange",
   className = "",
 }: {
   title: string;
   leftLabel: string;
-  leftValue: string;
+  leftTop: string;
+  leftBottom: string;
   rightLabel: string;
-  rightValue: string;
+  rightTop: string;
+  rightBottom: string;
   status: "Ahead" | "On Pace" | "Behind";
   accent?: "orange" | "black";
   className?: string;
@@ -125,31 +129,61 @@ function MetricRow({
   const accentBar =
     accent === "orange" ? "bg-[var(--pe-orange)]" : "bg-[var(--pe-black)]";
 
+  // progress bar should use the TOP numbers (count), not dollars
+  const actualNum = Number(leftTop?.replace(/[^0-9.-]+/g, ""));
+  const goalNum = Number(rightTop?.replace(/[^0-9.-]+/g, ""));
+  const ratio =
+    !isNaN(actualNum) && !isNaN(goalNum) && goalNum > 0
+      ? Math.min(actualNum / goalNum, 1.4)
+      : 0;
+
   return (
-    <div className={`rounded-2xl bg-[var(--pe-card)] p-5 shadow-sm border border-black/10 ${className}`}>
+    <div
+      className={`rounded-2xl bg-[var(--pe-card)] p-5 shadow-sm border border-black/10 ${className}`}
+    >
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
           <div className="text-sm font-extrabold text-black/70">{title}</div>
 
           <div className="mt-3 flex items-end justify-between gap-8">
-  <div className="max-w-[45%]">
-    <div className="text-xs font-semibold text-black/50">{leftLabel}</div>
-    <div className="mt-1 text-lg font-extrabold text-[var(--pe-black)]">
-      {leftValue}
-    </div>
-  </div>
+            <div className="max-w-[45%]">
+              <div className="text-xs font-semibold text-black/50">{leftLabel}</div>
 
-  <div className="ml-auto text-right">
-    <div className="text-xs font-semibold text-black/50">{rightLabel}</div>
-    <div className="mt-1 text-lg font-extrabold text-[var(--pe-black)]">
-      {rightValue}
-    </div>
-  </div>
-</div>
+              <div className="mt-1 text-lg font-extrabold text-[var(--pe-black)]">
+                {leftTop}
+              </div>
+
+              <div className="mt-1 text-sm font-bold text-black/60">
+                {leftBottom}
+              </div>
+            </div>
+
+            <div className="ml-auto text-right">
+              <div className="text-xs font-semibold text-black/50">{rightLabel}</div>
+
+              <div className="mt-1 text-lg font-extrabold text-[var(--pe-black)]">
+                {rightTop}
+              </div>
+
+              <div className="mt-1 text-sm font-bold text-black/60">
+                {rightBottom}
+              </div>
+            </div>
+          </div>
         </div>
 
         <StatusChip status={status} />
       </div>
+
+      <div className="mt-4 h-2 w-full rounded-full bg-black/10 overflow-hidden">
+        <div
+          className={`h-full ${accentBar} rounded-full transition-all duration-500`}
+          style={{ width: `${ratio * 100}%` }}
+        />
+      </div>
+    </div>
+  );
+}
 
       {(() => {
   const actualNum = Number(leftValue?.replace(/[^0-9.-]+/g, ""));
