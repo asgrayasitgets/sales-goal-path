@@ -178,29 +178,6 @@ function MetricRow({
     </div>
   );
 }
-      {(() => {
-  const actualNum = Number(leftValue?.replace(/[^0-9.-]+/g, ""));
-  const goalNum = Number(rightValue?.replace(/[^0-9.-]+/g, ""));
-  const ratio =
-    !isNaN(actualNum) && !isNaN(goalNum) && goalNum > 0
-      ? Math.min(actualNum / goalNum, 1.4)
-      : 0;
-
-  return (
-    <div className="mt-4 h-2 w-full rounded-full bg-black/10 overflow-hidden">
-      <div
-        className={`h-full ${accentBar} rounded-full transition-all duration-500`}
-        style={{ width: `${ratio * 100}%` }}
-      />
-    </div>
-  );
-})()}
-
-</div> 
-
-</div>
-);
-}
 
 function PaceBar({
   actualYTD,
