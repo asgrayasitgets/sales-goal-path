@@ -189,7 +189,7 @@ function MetricRowStacked({
   );
 }
 
-      {(()} => {
+      {(() => {
   const actualNum = Number(leftValue?.replace(/[^0-9.-]+/g, ""));
   const goalNum = Number(rightValue?.replace(/[^0-9.-]+/g, ""));
   const ratio =
@@ -206,8 +206,11 @@ function MetricRowStacked({
     </div>
   );
 })()}
-    </div>
-  );
+
+</div> {/* ✅ ADD THIS LINE */}
+
+</div>
+);
 }
 
 function PaceBar({
