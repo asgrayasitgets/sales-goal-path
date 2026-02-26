@@ -390,17 +390,18 @@ async function load() {
             />
 
             <MetricRow
-              title={`Quotes Count (${data?.monthly?.month ?? "This Month"})`}
-              leftLabel="Actual"
-              leftValue={formatInt(data?.monthly?.quotesCount?.actual ?? null)}
-              rightLabel="Goal"
-              rightValue={formatInt(data?.monthly?.quotesCount?.target ?? null)}
-              status={getStatus(
-                data?.monthly?.quotesCount?.actual ?? null,
-                data?.monthly?.quotesCount?.target ?? null
-              )}
-              accent="black"
-            />
+  title={`Quotes Count (${data?.monthly?.month ?? "This Month"})`}
+  leftLabel="Actual"
+  leftValue={formatInt(data?.monthly?.quotesCount?.actual ?? null)}
+  rightLabel="Goal"
+  rightValue={formatInt(data?.monthly?.quotesCount?.target ?? null)}
+  status={getStatus(
+    data?.monthly?.quotesCount?.actual ?? null,
+    data?.monthly?.quotesCount?.target ?? null
+  )}
+  accent="black"
+  className="bg-white border border-black/15 shadow-sm"
+/>
 
             <MetricRow
               title={`Quotes Value (${data?.monthly?.month ?? "This Month"})`}
