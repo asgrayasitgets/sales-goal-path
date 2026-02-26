@@ -442,18 +442,18 @@ async function load() {
             />
 
             <MetricRowStacked
-  title={`Quotes (${data?.monthly?.month ?? "This Month"})`}
+  title={`Jobs Landed (${data?.monthly?.month ?? "This Month"})`}
   leftLabel="Actual"
-  leftTop={formatInt(data?.monthly?.quotesCount?.actual ?? null)}
-  leftBottom={formatMoney(data?.monthly?.quotesValue?.actual ?? null)}
+  leftTop={formatInt(data?.monthly?.jobsLandedCount?.actual ?? null)}
+  leftBottom={formatMoney(data?.monthly?.jobsLandedValue?.actual ?? null)}
   rightLabel="Goal"
-  rightTop={formatInt(data?.monthly?.quotesCount?.target ?? null)}
-  rightBottom={formatMoney(data?.monthly?.quotesValue?.target ?? null)}
+  rightTop={formatInt(data?.monthly?.jobsLandedCount?.target ?? null)}
+  rightBottom={formatMoney(data?.monthly?.jobsLandedValue?.target ?? null)}
   status={getStatus(
-    data?.monthly?.quotesCount?.actual ?? null,
-    data?.monthly?.quotesCount?.target ?? null
+    data?.monthly?.jobsLandedCount?.actual ?? null,
+    data?.monthly?.jobsLandedCount?.target ?? null
   )}
-  accent="black"
+  accent="orange"
 />
           </div>
         )}
@@ -475,18 +475,18 @@ async function load() {
             />
 
             <MetricRowStacked
-  title={`Quotes (Week Ending ${data?.weekly?.weekEnding ?? ""})`}
+  title={`Jobs Landed (Week Ending ${data?.weekly?.weekEnding ?? ""})`}
   leftLabel="Actual"
-  leftTop={formatInt(data?.weekly?.quotesCount?.actual ?? null)}
-  leftBottom={formatMoney(data?.weekly?.quotesValue?.actual ?? null)}
+  leftTop={formatInt(data?.weekly?.jobsLandedCount?.actual ?? null)}
+  leftBottom={formatMoney(data?.weekly?.jobsLandedValue?.actual ?? null)}
   rightLabel="Goal"
-  rightTop={formatInt(data?.weekly?.quotesCount?.target ?? null)}
-  rightBottom={formatMoney(data?.weekly?.quotesValue?.target ?? null)}
+  rightTop={formatInt(data?.weekly?.jobsLandedCount?.target ?? null)}
+  rightBottom={formatMoney(data?.weekly?.jobsLandedValue?.target ?? null)}
   status={getStatus(
-    data?.weekly?.quotesCount?.actual ?? null,
-    data?.weekly?.quotesCount?.target ?? null
+    data?.weekly?.jobsLandedCount?.actual ?? null,
+    data?.weekly?.jobsLandedCount?.target ?? null
   )}
-  accent="black"
+  accent="orange"
 />
           </div>
         )}
