@@ -47,15 +47,19 @@ function formatPercent(n: number | null) {
   }).format(n);
 }
 
-function Card({ label, value }: { label: string; value: string }) {
+function Card({
+  label,
+  value,
+  className = "",
+}: {
+  label: string;
+  value: string;
+  className?: string;
+}) {
   return (
-    <div className="rounded-2xl bg-[var(--pe-card)] p-5 shadow-sm border border-black/5 min-w-0">
-      <div className="text-sm font-semibold tracking-wide text-black/60">
-        {label}
-      </div>
-      <div className="mt-2 font-extrabold leading-none text-[var(--pe-black)] tracking-tight whitespace-nowrap text-[clamp(1.1rem,3.2vw,1.9rem)]">
-        {value}
-      </div>
+    <div className={`rounded-3xl bg-white border border-black/10 shadow-sm p-4 ${className}`}>
+      <div className="text-xs font-semibold text-black/60">{label}</div>
+      <div className="mt-1 text-lg font-extrabold text-black">{value}</div>
     </div>
   );
 }
