@@ -6,6 +6,10 @@ type MonthlyWeeklyBlock = {
   revenue: { target: number | null; actual: number | null };
   quotesCount: { target: number | null; actual: number | null };
   quotesValue: { target: number | null; actual: number | null };
+
+  jobsLandedCount: { target: number | null; actual: number | null };
+  jobsLandedValue: { target: number | null; actual: number | null };
+
   sourceRow: number;
 };
 
