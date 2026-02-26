@@ -6,7 +6,6 @@ type MonthlyWeeklyBlock = {
   revenue: { target: number | null; actual: number | null };
   quotesCount: { target: number | null; actual: number | null };
   quotesValue: { target: number | null; actual: number | null };
-
   jobsLandedCount: { target: number | null; actual: number | null };
   jobsLandedValue: { target: number | null; actual: number | null };
 
@@ -493,7 +492,21 @@ async function load() {
               )}
               accent="orange"
             />
-
+<MetricRowStacked
+  title={`Quotes (${data?.monthly?.month ?? "This Month"})`}
+  leftLabel="Actual"
+  leftTop={formatInt(data?.monthly?.quotesCount?.actual ?? null)}
+  leftBottom={formatMoney(data?.monthly?.quotesValue?.actual ?? null)}
+  rightLabel="Goal"
+  rightTop={formatInt(data?.monthly?.quotesCount?.target ?? null)}
+  rightBottom={formatMoney(data?.monthly?.quotesValue?.target ?? null)}
+  status={getStatus(
+    data?.monthly?.quotesCount?.actual ?? null,
+    data?.monthly?.quotesCount?.target ?? null
+  )}
+  accent="black"
+/>
+            
             <MetricRowStacked
   title={`Jobs Landed (${data?.monthly?.month ?? "This Month"})`}
   leftLabel="Actual"
@@ -526,7 +539,21 @@ async function load() {
               )}
               accent="orange"
             />
-
+<MetricRowStacked
+  title={`Quotes (Week Ending ${data?.weekly?.weekEnding ?? ""})`}
+  leftLabel="Actual"
+  leftTop={formatInt(data?.weekly?.quotesCount?.actual ?? null)}
+  leftBottom={formatMoney(data?.weekly?.quotesValue?.actual ?? null)}
+  rightLabel="Goal"
+  rightTop={formatInt(data?.weekly?.quotesCount?.target ?? null)}
+  rightBottom={formatMoney(data?.weekly?.quotesValue?.target ?? null)}
+  status={getStatus(
+    data?.weekly?.quotesCount?.actual ?? null,
+    data?.weekly?.quotesCount?.target ?? null
+  )}
+  accent="black"
+/>
+            
             <MetricRowStacked
   title={`Jobs Landed (Week Ending ${data?.weekly?.weekEnding ?? ""})`}
   leftLabel="Actual"
