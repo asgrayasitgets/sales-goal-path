@@ -57,10 +57,17 @@ function Card({
   className?: string;
 }) {
   return (
-    <div className={`rounded-3xl bg-white border border-black/10 shadow-sm p-4 ${className}`}>
+    <div
+      className={[
+        "rounded-3xl p-4",
+        "bg-white border border-black/10 shadow-sm",
+        className,
+      ].join(" ")}
+    >
       <div className="text-xs font-semibold text-black/60">{label}</div>
-      <div className="text-xs font-semibold text-black/60">{label}</div>
-<div className="mt-1 text-lg font-extrabold">{value}</div>
+      <div className="mt-1 text-lg font-extrabold text-[var(--pe-black)]">
+        {value}
+      </div>
     </div>
   );
 }
