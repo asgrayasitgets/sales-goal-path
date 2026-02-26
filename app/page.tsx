@@ -477,120 +477,100 @@ async function load() {
           </>
         )}
 
-        {/* Monthly */}
-        {tab === "Monthly" && (
-          <div
-  className={[
-    "rounded-2xl p-5 shadow-sm border border-black/10",
-    className || "bg-[var(--pe-card)]",
-  ].join(" ")}
->
-            <MetricRow
-              title={`Revenue (${data?.monthly?.month ?? "This Month"})`}
-              leftLabel="Actual"
-              leftValue={formatMoney(data?.monthly?.revenue?.actual ?? null)}
-              rightLabel="Goal"
-              rightValue={formatMoney(data?.monthly?.revenue?.target ?? null)}
-              status={getStatus(
-                data?.monthly?.revenue?.actual ?? null,
-                data?.monthly?.revenue?.target ?? null
-              )}
-              accent="orange"
-            />
-<MetricRowStacked
-  title={`Quotes (${data?.monthly?.month ?? "This Month"})`}
-  leftLabel="Actual"
-  leftTop={formatInt(data?.monthly?.quotesCount?.actual ?? null)}
-  leftBottom={formatMoney(data?.monthly?.quotesValue?.actual ?? null)}
-  rightLabel="Goal"
-  rightTop={formatInt(data?.monthly?.quotesCount?.target ?? null)}
-  rightBottom={formatMoney(data?.monthly?.quotesValue?.target ?? null)}
-  status={getStatus(
-    data?.monthly?.quotesCount?.actual ?? null,
-    data?.monthly?.quotesCount?.target ?? null
-  )}
-  accent="black"
-/>
-            
-            <MetricRowStacked
-  title={`Jobs Landed (${data?.monthly?.month ?? "This Month"})`}
-  leftLabel="Actual"
-  leftTop={formatInt(data?.monthly?.jobsLandedCount?.actual ?? null)}
-  leftBottom={formatMoney(data?.monthly?.jobsLandedValue?.actual ?? null)}
-  rightLabel="Goal"
-  rightTop={formatInt(data?.monthly?.jobsLandedCount?.target ?? null)}
-  rightBottom={formatMoney(data?.monthly?.jobsLandedValue?.target ?? null)}
-  status={getStatus(
-    data?.monthly?.jobsLandedCount?.actual ?? null,
-    data?.monthly?.jobsLandedCount?.target ?? null
-  )}
-  accent="orange"
-/>
-          </div>
-        )}
+       {/* Monthly */}
+{tab === "Monthly" && (
+  <div className="mt-5 space-y-3">
+    <MetricRow
+      title={`Revenue (${data?.monthly?.month ?? "This Month"})`}
+      leftLabel="Actual"
+      leftValue={formatMoney(data?.monthly?.revenue?.actual ?? null)}
+      rightLabel="Goal"
+      rightValue={formatMoney(data?.monthly?.revenue?.target ?? null)}
+      status={getStatus(
+        data?.monthly?.revenue?.actual ?? null,
+        data?.monthly?.revenue?.target ?? null
+      )}
+      accent="orange"
+    />
 
-        {/* Weekly */}
-        {tab === "Weekly" && (
-          <div
-  className={[
-    "rounded-2xl p-5 shadow-sm border border-black/10",
-    className || "bg-[var(--pe-card)]",
-  ].join(" ")}
->
-            <MetricRow
-              title={`Revenue (Week Ending ${data?.weekly?.weekEnding ?? ""})`}
-              leftLabel="Actual"
-              leftValue={formatMoney(data?.weekly?.revenue?.actual ?? null)}
-              rightLabel="Goal"
-              rightValue={formatMoney(data?.weekly?.revenue?.target ?? null)}
-              status={getStatus(
-                data?.weekly?.revenue?.actual ?? null,
-                data?.weekly?.revenue?.target ?? null
-              )}
-              accent="orange"
-            />
-<MetricRowStacked
-  title={`Quotes (Week Ending ${data?.weekly?.weekEnding ?? ""})`}
-  leftLabel="Actual"
-  leftTop={formatInt(data?.weekly?.quotesCount?.actual ?? null)}
-  leftBottom={formatMoney(data?.weekly?.quotesValue?.actual ?? null)}
-  rightLabel="Goal"
-  rightTop={formatInt(data?.weekly?.quotesCount?.target ?? null)}
-  rightBottom={formatMoney(data?.weekly?.quotesValue?.target ?? null)}
-  status={getStatus(
-    data?.weekly?.quotesCount?.actual ?? null,
-    data?.weekly?.quotesCount?.target ?? null
-  )}
-  accent="black"
-/>
-            
-            <MetricRowStacked
-  title={`Jobs Landed (Week Ending ${data?.weekly?.weekEnding ?? ""})`}
-  leftLabel="Actual"
-  leftTop={formatInt(data?.weekly?.jobsLandedCount?.actual ?? null)}
-  leftBottom={formatMoney(data?.weekly?.jobsLandedValue?.actual ?? null)}
-  rightLabel="Goal"
-  rightTop={formatInt(data?.weekly?.jobsLandedCount?.target ?? null)}
-  rightBottom={formatMoney(data?.weekly?.jobsLandedValue?.target ?? null)}
-  status={getStatus(
-    data?.weekly?.jobsLandedCount?.actual ?? null,
-    data?.weekly?.jobsLandedCount?.target ?? null
-  )}
-  accent="orange"
-/>
-          </div>
-        )}
+    <MetricRowStacked
+      title={`Quotes (${data?.monthly?.month ?? "This Month"})`}
+      leftLabel="Actual"
+      leftTop={formatInt(data?.monthly?.quotesCount?.actual ?? null)}
+      leftBottom={formatMoney(data?.monthly?.quotesValue?.actual ?? null)}
+      rightLabel="Goal"
+      rightTop={formatInt(data?.monthly?.quotesCount?.target ?? null)}
+      rightBottom={formatMoney(data?.monthly?.quotesValue?.target ?? null)}
+      status={getStatus(
+        data?.monthly?.quotesCount?.actual ?? null,
+        data?.monthly?.quotesCount?.target ?? null
+      )}
+      accent="black"
+      className="bg-transparent shadow-none border border-black/20"
+    />
 
-        <div className="mt-4 text-xs text-black/50 text-center">
-          {error ? (
-            <span className="text-red-600">{error}</span>
-          ) : data?.fetchedAt ? (
-            <>Last updated: {new Date(data.fetchedAt).toLocaleString()}</>
-          ) : (
-            "Loading…"
-          )}
-        </div>
-      </div>
-    </main>
-  );
-}
+    <MetricRowStacked
+      title={`Jobs Landed (${data?.monthly?.month ?? "This Month"})`}
+      leftLabel="Actual"
+      leftTop={formatInt(data?.monthly?.jobsLandedCount?.actual ?? null)}
+      leftBottom={formatMoney(data?.monthly?.jobsLandedValue?.actual ?? null)}
+      rightLabel="Goal"
+      rightTop={formatInt(data?.monthly?.jobsLandedCount?.target ?? null)}
+      rightBottom={formatMoney(data?.monthly?.jobsLandedValue?.target ?? null)}
+      status={getStatus(
+        data?.monthly?.jobsLandedCount?.actual ?? null,
+        data?.monthly?.jobsLandedCount?.target ?? null
+      )}
+      accent="orange"
+    />
+  </div>
+)}
+
+{/* Weekly */}
+{tab === "Weekly" && (
+  <div className="mt-5 space-y-3">
+    <MetricRow
+      title={`Revenue (Week Ending ${data?.weekly?.weekEnding ?? ""})`}
+      leftLabel="Actual"
+      leftValue={formatMoney(data?.weekly?.revenue?.actual ?? null)}
+      rightLabel="Goal"
+      rightValue={formatMoney(data?.weekly?.revenue?.target ?? null)}
+      status={getStatus(
+        data?.weekly?.revenue?.actual ?? null,
+        data?.weekly?.revenue?.target ?? null
+      )}
+      accent="orange"
+    />
+
+    <MetricRowStacked
+      title={`Quotes (Week Ending ${data?.weekly?.weekEnding ?? ""})`}
+      leftLabel="Actual"
+      leftTop={formatInt(data?.weekly?.quotesCount?.actual ?? null)}
+      leftBottom={formatMoney(data?.weekly?.quotesValue?.actual ?? null)}
+      rightLabel="Goal"
+      rightTop={formatInt(data?.weekly?.quotesCount?.target ?? null)}
+      rightBottom={formatMoney(data?.weekly?.quotesValue?.target ?? null)}
+      status={getStatus(
+        data?.weekly?.quotesCount?.actual ?? null,
+        data?.weekly?.quotesCount?.target ?? null
+      )}
+      accent="black"
+      className="bg-transparent shadow-none border border-black/20"
+    />
+
+    <MetricRowStacked
+      title={`Jobs Landed (Week Ending ${data?.weekly?.weekEnding ?? ""})`}
+      leftLabel="Actual"
+      leftTop={formatInt(data?.weekly?.jobsLandedCount?.actual ?? null)}
+      leftBottom={formatMoney(data?.weekly?.jobsLandedValue?.actual ?? null)}
+      rightLabel="Goal"
+      rightTop={formatInt(data?.weekly?.jobsLandedCount?.target ?? null)}
+      rightBottom={formatMoney(data?.weekly?.jobsLandedValue?.target ?? null)}
+      status={getStatus(
+        data?.weekly?.jobsLandedCount?.actual ?? null,
+        data?.weekly?.jobsLandedCount?.target ?? null
+      )}
+      accent="orange"
+    />
+  </div>
+)}
