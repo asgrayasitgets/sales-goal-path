@@ -266,7 +266,7 @@ function MetricRowStacked({
     </div>
   );
 }
-}
+
 function PaceBar({
   actualYTD,
   expectedYTD,
