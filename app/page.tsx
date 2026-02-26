@@ -59,7 +59,8 @@ function Card({
   return (
     <div className={`rounded-3xl bg-white border border-black/10 shadow-sm p-4 ${className}`}>
       <div className="text-xs font-semibold text-black/60">{label}</div>
-      <div className="mt-1 text-lg font-extrabold text-black">{value}</div>
+      <div className="text-xs font-semibold text-black/60">{label}</div>
+<div className="mt-1 text-lg font-extrabold">{value}</div>
     </div>
   );
 }
