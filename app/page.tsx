@@ -354,12 +354,16 @@ async function load() {
         {tab === "YTD" && (
           <>
             <div className="mt-5 grid grid-cols-2 gap-3">
-             {ytdCards.map((c) => (
+             {ytdCards.map((c, i) => (
   <Card
     key={c.label}
     label={c.label}
     value={c.value}
-    className={c.label === "Conversion Rate" ? "bg-neutral-900 text-white border-neutral-900 shadow-md" : ""}
+    className={
+      i % 2 === 1
+        ? "bg-transparent border border-black/20 shadow-none"
+        : "bg-white border border-black/10 shadow-sm"
+    }
   />
 ))}
             </div>
