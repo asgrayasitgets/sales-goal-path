@@ -166,7 +166,7 @@ function MetricRow({
         <StatusChip status={status} />
       </div>
 
-      <div className="mt-4 h-2 w-full rounded-full bg-black/10 overflow-hidden">
+           <div className="mt-4 h-2 w-full rounded-full bg-black/10 overflow-hidden">
         <div
           className={`h-full ${accentBar} rounded-full transition-all duration-500`}
           style={{ width: `${ratio * 100}%` }}
