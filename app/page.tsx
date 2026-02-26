@@ -303,7 +303,7 @@ async function load() {
   return (
     <main className="min-h-screen bg-[var(--pe-beige)] p-5">
       <div className="mx-auto max-w-md">
-        <div className="rounded-3xl bg-[var(--header-bg)] text-[var(--header-text)] p-5 border border-black/10 shadow-sm">
+        <div className="rounded-3xl bg-[var(--header-bg)] text-[var(--header-text)] p-5 border border-black/10 shadow-md">
           <div className="flex items-start justify-between gap-4">
             <div>
               <div className="text-xl font-extrabold text-[var(--pe-tan)]">
