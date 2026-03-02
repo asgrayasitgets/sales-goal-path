@@ -141,20 +141,23 @@ function MetricRow({
         <div className="min-w-0 flex-1">
           <div className="text-sm font-extrabold text-black/70">{title}</div>
 
-          <div className="mt-3 w-full grid grid-cols-2 items-end gap-16">
+          <div className="mt-3 grid w-full grid-cols-2 items-end">
   <div className="text-left">
     <div className="text-xs font-semibold text-black/50">{leftLabel}</div>
     <div className="mt-1 text-lg font-extrabold text-[var(--pe-black)]">
-      {leftValue}
+      {leftTop}
     </div>
+    <div className="mt-1 text-sm font-bold text-black/60">{leftBottom}</div>
   </div>
 
   <div className="justify-self-end text-right">
     <div className="text-xs font-semibold text-black/50">{rightLabel}</div>
     <div className="mt-1 text-lg font-extrabold text-[var(--pe-black)]">
-      {rightValue}
+      {rightTop}
     </div>
+    <div className="mt-1 text-sm font-bold text-black/60">{rightBottom}</div>
   </div>
+</div>
 </div>
         </div>
 
