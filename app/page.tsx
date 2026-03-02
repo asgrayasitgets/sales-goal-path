@@ -230,7 +230,7 @@ function MetricRowStacked({
       {leftBottom}
     </div>
   </div>
-
+<div className="justify-self-end text-right">
   <div className="text-right">
     <div className="text-xs font-semibold text-black/50">{rightLabel}</div>
 
@@ -314,7 +314,7 @@ function PaceBar({
           </div>
         </div>
 
-        <div className="text-right">
+        <div className="justify-self-end text-right">
           <div className="text-xs font-semibold text-black/50">Actual vs Expected</div>
           <div className="mt-1 text-sm font-extrabold text-[var(--pe-black)]">
             {Math.round(pct)}%
