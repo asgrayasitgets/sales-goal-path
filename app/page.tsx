@@ -149,7 +149,7 @@ function MetricRow({
     </div>
   </div>
 
-  <div className="text-right">
+  <div className="justify-self-end text-right">
     <div className="text-xs font-semibold text-black/50">{rightLabel}</div>
     <div className="mt-1 text-lg font-extrabold text-[var(--pe-black)]">
       {rightValue}
