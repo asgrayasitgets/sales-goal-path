@@ -25,8 +25,47 @@ lastYearRevenue: number | null;
   monthly: ({ month: string } & MonthlyWeeklyBlock) | null;
   weekly: ({ weekEnding: string } & MonthlyWeeklyBlock) | null;
 
+  lastWeekly:
+    | {
+        weekEnding: string;
+        revenue: { actual: number | null };
+        quotesCompleted: { count: number | null; value: number | null };
+        jobsLanded: { count: number | null; value: number | null };
+        sourceRow: number;
+      }
+    | null;
+
   fetchedAt: string;
 };
+
+function StatLine({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="flex items-baseline justify-between gap-4">
+      <div className="text-xs font-semibold text-[color:var(--pe-muted)]">{label}</div>
+      <div className="text-sm font-extrabold text-[var(--pe-black)] text-right">{value}</div>
+    </div>
+  );
+}
+
+function StatLineStacked({
+  label,
+  top,
+  bottom,
+}: {
+  label: string;
+  top: string;
+  bottom: string;
+}) {
+  return (
+    <div className="flex items-start justify-between gap-4">
+      <div className="text-xs font-semibold text-[color:var(--pe-muted)]">{label}</div>
+      <div className="text-right">
+        <div className="text-sm font-extrabold text-[var(--pe-black)]">{top}</div>
+        <div className="mt-0.5 text-xs font-bold text-[color:var(--pe-muted)]">{bottom}</div>
+      </div>
+    </div>
+  );
+}
 
 function formatMoney(n: number | null) {
   if (n === null) return "—";
@@ -584,6 +623,39 @@ async function load() {
       )}
       accent="orange"
     />
+
+    {/* Last Week Stats */}
+    <div className="rounded-2xl bg-transparent p-5 shadow-none border border-[color:var(--pe-border)]">
+      <div className="flex items-start justify-between gap-3">
+        <div className="min-w-0 flex-1">
+          <div className="text-sm font-extrabold text-[color:var(--pe-muted)]">
+            Last Week’s Stats
+          </div>
+          <div className="mt-1 text-xs font-semibold text-[color:var(--pe-muted)]">
+            Week Ending {data?.lastWeekly?.weekEnding ?? "—"}
+          </div>
+        </div>
+      </div>
+
+      <div className="mt-4 space-y-3">
+        <StatLine
+          label="Revenue"
+          value={formatMoney(data?.lastWeekly?.revenue?.actual ?? null)}
+        />
+
+        <StatLineStacked
+          label="Quotes Completed"
+          top={formatInt(data?.lastWeekly?.quotesCompleted?.count ?? null)}
+          bottom={formatMoney(data?.lastWeekly?.quotesCompleted?.value ?? null)}
+        />
+
+        <StatLineStacked
+          label="Jobs Landed"
+          top={formatInt(data?.lastWeekly?.jobsLanded?.count ?? null)}
+          bottom={formatMoney(data?.lastWeekly?.jobsLanded?.value ?? null)}
+        />
+      </div>
+    </div>
   </div>
 )}
         <div className="mt-4 text-xs text-[color:var(--pe-muted)] text-center">
