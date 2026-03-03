@@ -5,16 +5,13 @@ export const metadata = {
   description: "Live dashboard powered by Google Sheet data",
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html
-  lang="en"
-  style={
-    {
+    <html lang="en">
+      <body>{children}</body>
+    </html>
+  );
+}
       // ========= NEW STANDARD TOKENS (preferred) =========
       "--brand-bg":
         process.env.NEXT_PUBLIC_BRAND_BG || "#F1EFE7",
