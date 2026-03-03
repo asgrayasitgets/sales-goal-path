@@ -71,7 +71,7 @@ function csvToGrid(csvText: string): string[][] {
   return rows;
 }
 
-function getCellRC(gridPadded: string[][], row: number, col: number): string {
+function getCellRC(grid: string[][], row: number, col: number): string {
   return (grid[row - 1]?.[col - 1] ?? "").toString().trim();
 }
 
