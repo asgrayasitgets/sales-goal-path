@@ -342,12 +342,36 @@ const monthly =
     weekly,
 
     debug: {
-      businessTimeZone: BUSINESS_TIMEZONE,
-      todayKey,
-      weeklyRange: `${WEEKLY_START_ROW}-${WEEKLY_END_ROW}`,
-      pickedWeeklyRow: weekRow,
-      pickedWeekEnding: weekRow ? getCellRC(grid, weekRow, 1) : null,
-    },
+  businessTimeZone: BUSINESS_TIMEZONE,
+  todayKey,
+  weeklyRange: `${WEEKLY_START_ROW}-${WEEKLY_END_ROW}`,
+  pickedWeeklyRow: weekRow,
+  pickedWeekEnding: weekRow ? getCellRC(grid, weekRow, 1) : null,
+
+  // ===== Jobs Landed debug =====
+  monthRow,
+  monthRowLen: monthRow ? (grid[monthRow - 1]?.length ?? null) : null,
+  jobsMonthlyRaw:
+    monthRow == null
+      ? null
+      : {
+          K: getCellRC(grid, monthRow, 11),
+          L: getCellRC(grid, monthRow, 12),
+          M: getCellRC(grid, monthRow, 13),
+          N: getCellRC(grid, monthRow, 14),
+        },
+
+  weekRowLen: weekRow ? (grid[weekRow - 1]?.length ?? null) : null,
+  jobsWeeklyRaw:
+    weekRow == null
+      ? null
+      : {
+          K: getCellRC(grid, weekRow, 11),
+          L: getCellRC(grid, weekRow, 12),
+          M: getCellRC(grid, weekRow, 13),
+          N: getCellRC(grid, weekRow, 14),
+        },
+},
 
     fetchedAt: new Date().toISOString(),
   });
