@@ -68,7 +68,7 @@ function Card({
       ].join(" ")}
     >
       <div className="text-xs font-semibold text-black/60">{label}</div>
-      <div className="mt-1 text-lg font-extrabold text-[var(--pe-black)]">
+      <div className="mt-1 text-lg font-extrabold text-[var(--pe-#ffffff)]">
         {value}
       </div>
     </div>
