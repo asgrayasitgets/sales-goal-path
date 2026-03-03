@@ -31,6 +31,8 @@ function currentMonthNameInTimeZone(timeZone: string): { monthName: string; mont
 }
 
 function csvToGrid(csvText: string): string[][] {
+  const maxCols = Math.max(...grid.map((r) => r.length));
+const gridPadded = grid.map((r) => r.concat(Array(maxCols - r.length).fill("")));
   const rows: string[][] = [];
   let row: string[] = [];
   let cur = "";
