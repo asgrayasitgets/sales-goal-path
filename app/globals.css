@@ -34,6 +34,7 @@
   --pe-success: var(--brand-success);
   --pe-warning: var(--brand-warning);
   --pe-danger: var(--brand-danger);
+  --pe-ink-light: #F1EFE7;
 
   /* ========= Buttons / Tabs / Header (optional; layout.tsx can override) ========= */
   --btn-bg: var(--brand-surface-strong);
