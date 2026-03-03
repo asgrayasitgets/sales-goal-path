@@ -73,7 +73,7 @@ const gridPadded = grid.map((r) => r.concat(Array(maxCols - r.length).fill("")))
   return rows;
 }
 
-function getCellRC(grid: string[][], row: number, col: number): string {
+function getCellRC(gridPadded: string[][], row: number, col: number): string {
   return (grid[row - 1]?.[col - 1] ?? "").toString().trim();
 }
 
@@ -89,7 +89,7 @@ function getCellA1(grid: string[][], a1: string): string {
     colNumber = colNumber * 26 + (colLetters.charCodeAt(i) - 64);
   }
 
-  return getCellRC(grid, rowNumber, colNumber);
+  return getCellRC(gridPadded, rowNumber, colNumber);
 }
 
 function toNumber(value: string): number | null {
