@@ -233,7 +233,8 @@ export async function GET() {
 
   const csvText = await res.text();
   const grid = csvToGrid(csvText);
-
+  const maxCols = Math.max(...grid.map((r) => r.length));
+  const gridPadded = grid.map((r) => r.concat(Array(maxCols - r.length).fill("")));
   // Base KPIs
   const salesGoalAnnual = toNumber(getCellA1(grid, "C3"));
   const lastYearRevenue = toNumber(getCellA1(grid, "C6"));
@@ -281,13 +282,13 @@ const monthly =
 
         // ✅ Jobs Landed
         jobsLandedValue: {
-          target: toNumber(getCellRC(grid, monthRow, 11)), // K
-          actual: toNumber(getCellRC(grid, monthRow, 13)), // M
-        },
-        jobsLandedCount: {
-          target: toNumber(getCellRC(grid, monthRow, 12)), // L
-          actual: toNumber(getCellRC(grid, monthRow, 14)), // N
-        },
+  target: toNumber(getCellRC(gridPadded, monthRow, 11)), // K
+  actual: toNumber(getCellRC(gridPadded, monthRow, 13)), // M
+},
+jobsLandedCount: {
+  target: toNumber(getCellRC(gridPadded, monthRow, 12)), // L
+  actual: toNumber(getCellRC(gridPadded, monthRow, 14)), // N
+},
 
         sourceRow: monthRow,
       };
@@ -314,15 +315,14 @@ const monthly =
           actual: toNumber(getCellRC(grid, weekRow, 9)), // I (assumed)
         },
 
-        // Jobs Landed (K–N)
-        jobsLandedValue: {
-          target: toNumber(getCellRC(grid, weekRow, 11)), // K
-          actual: toNumber(getCellRC(grid, weekRow, 13)), // M
-        },
-        jobsLandedCount: {
-          target: toNumber(getCellRC(grid, weekRow, 12)), // L
-          actual: toNumber(getCellRC(grid, weekRow, 14)), // N
-        },
+       jobsLandedValue: {
+  target: toNumber(getCellRC(gridPadded, weekRow, 11)), // K
+  actual: toNumber(getCellRC(gridPadded, weekRow, 13)), // M
+},
+jobsLandedCount: {
+  target: toNumber(getCellRC(gridPadded, weekRow, 12)), // L
+  actual: toNumber(getCellRC(gridPadded, weekRow, 14)), // N
+},
 
         sourceRow: weekRow,
       };
