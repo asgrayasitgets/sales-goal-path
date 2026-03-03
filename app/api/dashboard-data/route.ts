@@ -87,7 +87,7 @@ function getCellA1(grid: string[][], a1: string): string {
     colNumber = colNumber * 26 + (colLetters.charCodeAt(i) - 64);
   }
 
-  return getCellRC(gridPadded, rowNumber, colNumber);
+  return getCellRC(grid, rowNumber, colNumber);
 }
 
 function toNumber(value: string): number | null {
