@@ -220,6 +220,31 @@ function findCurrentWeekRow(grid: string[][], todayKey: number): number | null {
   return nextRow ?? prevRow;
 }
 
+/**
+ * Given the row for the "current week", find the immediately previous week row
+ * (largest week-ending date that is strictly < current week-ending date).
+ */
+function findPreviousWeekRow(grid: string[][], currentWeekKey: number | null): number | null {
+  if (currentWeekKey == null) return null;
+
+  let prevRow: number | null = null;
+  let prevKey: number | null = null;
+
+  for (let r = WEEKLY_START_ROW; r <= WEEKLY_END_ROW; r++) {
+    const raw = getCellRC(grid, r, 1); // col A: Week Ending on
+    const k = parseSheetDateToKey(raw);
+    if (k == null) continue;
+
+    if (k < currentWeekKey && (prevKey == null || k > prevKey)) {
+      prevKey = k;
+      prevRow = r;
+    }
+  }
+
+  return prevRow;
+}
+
+
 export async function GET() {
   const url = process.env.DASHBOARD_CSV_URL;
   if (!url) {
@@ -326,6 +351,30 @@ jobsLandedCount: {
 
         sourceRow: weekRow,
       };
+
+  // ----- Weekly (LAST WEEK) -----
+  const currentWeekKey = weekRow ? parseSheetDateToKey(getCellRC(grid, weekRow, 1)) : null;
+  const lastWeekRow = findPreviousWeekRow(grid, currentWeekKey);
+
+  const lastWeekly =
+    lastWeekRow == null
+      ? null
+      : {
+          weekEnding: getCellRC(grid, lastWeekRow, 1),
+          revenue: {
+            actual: toNumber(getCellRC(grid, lastWeekRow, 3)), // C
+          },
+          quotesCompleted: {
+            count: toNumber(getCellRC(grid, lastWeekRow, 10)), // J
+            value: toNumber(getCellRC(grid, lastWeekRow, 9)), // I
+          },
+          jobsLanded: {
+            count: toNumber(getCellRC(gridPadded, lastWeekRow, 14)), // N
+            value: toNumber(getCellRC(gridPadded, lastWeekRow, 13)), // M
+          },
+          sourceRow: lastWeekRow,
+        };
+
   
   return NextResponse.json({
     salesGoalAnnual,
@@ -340,6 +389,7 @@ jobsLandedCount: {
 
     monthly,
     weekly,
+    lastWeekly,
 
     debug: {
   businessTimeZone: BUSINESS_TIMEZONE,
@@ -347,6 +397,9 @@ jobsLandedCount: {
   weeklyRange: `${WEEKLY_START_ROW}-${WEEKLY_END_ROW}`,
   pickedWeeklyRow: weekRow,
   pickedWeekEnding: weekRow ? getCellRC(grid, weekRow, 1) : null,
+  currentWeekKey,
+  lastWeekRow,
+  lastWeekEnding: lastWeekRow ? getCellRC(grid, lastWeekRow, 1) : null,
 
   // ===== Jobs Landed debug =====
   monthRow,
@@ -376,3 +429,4 @@ jobsLandedCount: {
     fetchedAt: new Date().toISOString(),
   });
 }
+
