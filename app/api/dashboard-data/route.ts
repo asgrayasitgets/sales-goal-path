@@ -220,31 +220,6 @@ function findCurrentWeekRow(grid: string[][], todayKey: number): number | null {
   return nextRow ?? prevRow;
 }
 
-/**
- * Given the row for the "current week", find the immediately previous week row
- * (largest week-ending date that is strictly < current week-ending date).
- */
-function findPreviousWeekRow(grid: string[][], currentWeekKey: number | null): number | null {
-  if (currentWeekKey == null) return null;
-
-  let prevRow: number | null = null;
-  let prevKey: number | null = null;
-
-  for (let r = WEEKLY_START_ROW; r <= WEEKLY_END_ROW; r++) {
-    const raw = getCellRC(grid, r, 1); // col A: Week Ending on
-    const k = parseSheetDateToKey(raw);
-    if (k == null) continue;
-
-    if (k < currentWeekKey && (prevKey == null || k > prevKey)) {
-      prevKey = k;
-      prevRow = r;
-    }
-  }
-
-  return prevRow;
-}
-
-
 export async function GET() {
   const url = process.env.DASHBOARD_CSV_URL;
   if (!url) {
@@ -265,21 +240,39 @@ export async function GET() {
   const lastYearRevenue = toNumber(getCellA1(grid, "C6"));
   const conversionRate = toNumber(getCellA1(grid, "C16"));
 
-  // Pace inputs (your plan vs actual ranges)
-  const ytdActualRevenue = sumRangeSameColumn(grid, "C57", "C64");
-  const ytdExpectedRevenue = sumRangeSameColumn(grid, "B57", "B64");
+  
+  // YTD from monthly table rows 40-51, including current month
+  const {
+    monthName: currentMonthName,
+    monthNumber: currentMonthNumber,
+    year: currentYear,
+  } = currentMonthNameInTimeZone(BUSINESS_TIMEZONE);
+
+  const currentMonthRow = findMonthRow(grid, currentMonthName);
+
+  let ytdActualRevenue = 0;
+  let ytdExpectedRevenue = 0;
+
+  if (currentMonthRow != null) {
+    for (let row = 40; row <= currentMonthRow; row++) {
+      ytdExpectedRevenue += toNumber(getCellRC(grid, row, 2)) ?? 0; // B = target revenue
+      ytdActualRevenue += toNumber(getCellRC(grid, row, 3)) ?? 0;   // C = actual revenue
+    }
+
+    ytdActualRevenue = round2(ytdActualRevenue);
+    ytdExpectedRevenue = round2(ytdExpectedRevenue);
+  }
 
   const salesYTD = ytdActualRevenue;
+
   const percentOfGoal =
     salesGoalAnnual && salesGoalAnnual > 0 ? round2(salesYTD / salesGoalAnnual) : null;
 
   // ----- Monthly -----
   const today = new Date();
   // ----- Monthly (current month in BUSINESS_TIMEZONE) -----
-const { monthName: currentMonthName, monthNumber: currentMonthNumber, year: currentYear } =
-  currentMonthNameInTimeZone(BUSINESS_TIMEZONE);
-
 const monthRow = findMonthRow(grid, currentMonthName);
+
 
 // Column mapping (1-based):
 // Revenue: target=B, actual=C
@@ -351,30 +344,6 @@ jobsLandedCount: {
 
         sourceRow: weekRow,
       };
-
-  // ----- Weekly (LAST WEEK) -----
-  const currentWeekKey = weekRow ? parseSheetDateToKey(getCellRC(grid, weekRow, 1)) : null;
-  const lastWeekRow = findPreviousWeekRow(grid, currentWeekKey);
-
-  const lastWeekly =
-    lastWeekRow == null
-      ? null
-      : {
-          weekEnding: getCellRC(grid, lastWeekRow, 1),
-          revenue: {
-            actual: toNumber(getCellRC(grid, lastWeekRow, 3)), // C
-          },
-          quotesCompleted: {
-            count: toNumber(getCellRC(grid, lastWeekRow, 10)), // J
-            value: toNumber(getCellRC(grid, lastWeekRow, 9)), // I
-          },
-          jobsLanded: {
-            count: toNumber(getCellRC(gridPadded, lastWeekRow, 14)), // N
-            value: toNumber(getCellRC(gridPadded, lastWeekRow, 13)), // M
-          },
-          sourceRow: lastWeekRow,
-        };
-
   
   return NextResponse.json({
     salesGoalAnnual,
@@ -389,7 +358,6 @@ jobsLandedCount: {
 
     monthly,
     weekly,
-    lastWeekly,
 
     debug: {
   businessTimeZone: BUSINESS_TIMEZONE,
@@ -397,9 +365,6 @@ jobsLandedCount: {
   weeklyRange: `${WEEKLY_START_ROW}-${WEEKLY_END_ROW}`,
   pickedWeeklyRow: weekRow,
   pickedWeekEnding: weekRow ? getCellRC(grid, weekRow, 1) : null,
-  currentWeekKey,
-  lastWeekRow,
-  lastWeekEnding: lastWeekRow ? getCellRC(grid, lastWeekRow, 1) : null,
 
   // ===== Jobs Landed debug =====
   monthRow,
@@ -429,4 +394,3 @@ jobsLandedCount: {
     fetchedAt: new Date().toISOString(),
   });
 }
-
